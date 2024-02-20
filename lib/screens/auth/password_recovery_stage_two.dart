@@ -18,13 +18,18 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class RecoverPasswordStageTwo extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   TextEditingController textEditingController = TextEditingController();
-  final String forEmailorPhone;
+  final List forEmailorPhone;
 
   RecoverPasswordStageTwo({super.key, required this.forEmailorPhone});
 
   @override
   Widget build(BuildContext context) {
-    return LoginScreenWrapper(
+    return
+
+
+
+
+      LoginScreenWrapper(
       child: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.fromLTRB(20.w, 44.h, 20.w, 0),
@@ -44,7 +49,11 @@ class RecoverPasswordStageTwo extends StatelessWidget {
               ),
               AppSpacerH(5.h),
               Text(
-                '${S.of(context).ndgtotp} $forEmailorPhone',
+                '${S.of(context).ndgtotp} ${forEmailorPhone[0]}',
+                style: AppTextDecor.osRegular18black,
+              ),
+              Text(
+                'OTP : ${forEmailorPhone[1]}',
                 style: AppTextDecor.osRegular18black,
               ),
               AppSpacerH(44.h),
@@ -113,7 +122,7 @@ class RecoverPasswordStageTwo extends StatelessWidget {
                                                   forgotPassProvider.notifier,
                                                 )
                                                 .forgotPassword(
-                                                  forEmailorPhone,
+                                                  "${forEmailorPhone[0]}",
                                                 );
 
                                             ref
@@ -196,7 +205,7 @@ class RecoverPasswordStageTwo extends StatelessWidget {
                                             .notifier,
                                       )
                                       .verifyOtp(
-                                        forEmailorPhone,
+                                        "${forEmailorPhone[0]}",
                                         textEditingController.text,
                                       );
                                 },

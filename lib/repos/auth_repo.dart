@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -12,6 +13,7 @@ import 'package:dry_cleaners/offline_data/login_data.dart';
 import 'package:dry_cleaners/services/api_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IAuthRepo {
   Future<LoginModel> login({
@@ -75,10 +77,16 @@ class AuthRepo extends IAuthRepo {
   Future<void> forgotPassword({required String contact}) async {
     final Map<String, dynamic> data = {};
     data["contact"]= contact;
-    await _dio.post(
+  final response =  await _dio.post(
       '/forgot-password',
       data: FormData.fromMap(data),
     );
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('otp',"${response.data['data']['otp']}");
+
+
   }
 
   @override

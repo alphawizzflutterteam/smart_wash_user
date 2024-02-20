@@ -509,14 +509,14 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => UserMapScreen(
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
-
+    print(request.url);
     if (response.statusCode == 200) {
       var result =await response.stream.bytesToString();
       var finalresult=jsonDecode(result);
 
 
         urlpdg=finalresult['pdf_url'];
-
+print("===my technic=======${AppConfig.baseUrl}/getinvoice/${orderID}==============");
         print("invoice================${urlpdg}");
       launch(urlpdg.toString());
 

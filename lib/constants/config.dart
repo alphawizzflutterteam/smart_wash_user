@@ -4,8 +4,8 @@ class AppConfig {
   AppConfig._();
   //Base Url For APP
   // static const String baseUrl = 'http://adminlaundry.razinsoft.com/api';
-    static const String baseUrl = 'http://laundry.developmentalphawizz.com/api';
-  // static const String baseUrl = 'http://smarttwash.com/api';
+  //   static const String baseUrl = 'http://laundry.developmentalphawizz.com/api';
+   static const String baseUrl = 'http://smarttwash.com/api';
 
   //Stripe Keys For App - Replace With Yours
   static const String secretKey =

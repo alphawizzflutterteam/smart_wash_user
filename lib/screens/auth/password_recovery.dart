@@ -15,6 +15,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class RecoverPasswordStageOne extends StatelessWidget {
@@ -86,14 +87,16 @@ class RecoverPasswordStageOne extends StatelessWidget {
                                               .saveAndValidate()) {
                                         final formData =
                                             _formkey.currentState!.fields;
-
                                         email =
                                             formData['email']!.value as String;
-                                        ref
+
+                                       ref
                                             .watch(forgotPassProvider.notifier)
                                             .forgotPassword(
                                               email,
                                             );
+
+
 
                                       }
                                     },
@@ -106,8 +109,11 @@ class RecoverPasswordStageOne extends StatelessWidget {
                                     return ErrorTextWidget(error: _.error);
                                   },
                                   loaded: (_) {
+
                                     Future.delayed(transissionDuration)
-                                        .then((value) {
+                                        .then((value) async {
+
+
                                       ref.refresh(
                                         forgotPassProvider,
                                       ); //Refresh This so That App Doesn't Auto Login
@@ -116,12 +122,14 @@ class RecoverPasswordStageOne extends StatelessWidget {
                                             forgotPassTimerProvider.notifier,
                                           )
                                           .startTimer();
-
+                                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                     otp= await prefs.getString('otp').toString();
+print("===my technic====otp===${otp}===============");
                                       Future.delayed(buildDuration)
                                           .then((value) {
                                         context.nav.pushNamed(
                                           Routes.recoverPassWordStageTwo,
-                                          arguments: email,
+                                          arguments: [email,otp],
                                         );
                                       });
                                     });

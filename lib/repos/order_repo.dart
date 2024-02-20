@@ -37,7 +37,7 @@ class OrderRepo implements IOrderRepo {
     if (status != '') {
       qp = {'status': status};
     }
-    final Response response = await _dio.get('/orders', queryParameters: qp);
+    final Response response = await _dio.get('/get_orders', queryParameters: qp);
     return AllOrdersModel.fromMap(response.data as Map<String, dynamic>);
   }
 

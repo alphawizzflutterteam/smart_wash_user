@@ -46,7 +46,7 @@ class HomeTab extends ConsumerStatefulWidget {
 }
 
 class _HomeTabState extends ConsumerState<HomeTab> {
-  late VideoPlayerController _controller;
+   late VideoPlayerController _controller;
 
   List postCodelist = [];
 
@@ -55,82 +55,79 @@ class _HomeTabState extends ConsumerState<HomeTab> {
     final url = 'https://www.google.com/maps/search/?api=1&query=$query';
     await launch(url);
   }
-var videeeo;
+
+  var videeeo;
   @override
   void initState() {
     super.initState();
     print('init of Home PAGE');
 
-     getUserCurrentLocation();
+    getUserCurrentLocation();
 
     getvideo();
 
     setupFirebaseMessaging();
-
   }
+
   var tokenn;
   var tokentype;
   Future<void> getvideo() async {
-
     tokenn = Hive.box(AppHSC.authBox);
 
     if (tokenn!.get(AppHSC.authToken) != null &&
-        tokenn!.get(AppHSC.authToken) != '') {
-
-    }
+        tokenn!.get(AppHSC.authToken) != '') {}
     final String token = tokenn!.get(AppHSC.authToken) as String;
     final String tokenType = tokenn!.get(AppHSC.authTokenType) as String;
 
-
     var headers = {
-      'Authorization': '$tokenType $token',};
+      'Authorization': '$tokenType $token',
+    };
     var request = http.Request('GET', Uri.parse('${AppConfig.baseUrl}/video'));
 
-   print("=============${request.body}");
-   print("=============${request.url}");
+    print("=============${request.body}");
+    print("=============${request.url}");
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      var result =await response.stream.bytesToString();
+      var result = await response.stream.bytesToString();
       print(result);
-      var finalresult=jsonDecode(result);
+      var finalresult = jsonDecode(result);
 
       setState(() {
-        videeeo=finalresult['data']['descritption'].toString();
+        videeeo = finalresult['data']['descritption'].toString();
+
+
+        print("===my technic==api video=====${videeeo}===============");
       });
-      print(finalresult['data']['descritption']);
 
-if(videeeo==null||videeeo=="null") {
-
-  _controller = VideoPlayerController.networkUrl(Uri.parse(
-      "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"))
-    ..initialize().then((_) {
-      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-      setState(() {});
-    });
-}
-else{
-  _controller = VideoPlayerController.networkUrl(Uri.parse(
-      "${videeeo}"))
-    ..initialize().then((_) {
-      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-      setState(() {});
-    });
-
-}
-    }
-    else {
+      if (videeeo == null || videeeo == "null") {
+        print("===my technic======video if======${videeeo}======");
 
 
+        _controller = VideoPlayerController.networkUrl(Uri.parse(
+            "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"))
+          ..initialize().then((_) {
+            setState(() {});
+          });
+      } else {
+        print("===my technic======video else============${videeeo}==");
+        setState(()  {
+          _controller =
+            VideoPlayerController.networkUrl(Uri.parse("${videeeo}"))
+            ..initialize().then((_) {
+              setState(() {});
+            });
+
+
+
+          });
+      }
+    } else {
       print(response.reasonPhrase);
     }
-
-
   }
-
-
 
   var latitude;
   var longitude;
@@ -155,7 +152,7 @@ else{
             print('lat==============${latitude}');
           });
       });
-       print("LOCATION===" +currentLocation.toString());
+      print("LOCATION===" + currentLocation.toString());
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
     }
@@ -342,41 +339,38 @@ else{
                           ),
                         ),
                         AppSpacerH(32.h),
-
-
-
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
-
                               InkWell(
-
                                 onTap: () {
-
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => OutletScreen(
-
-                                    lat:latitude.toString(),
-                                     lang:longitude.toString()
-                                             ),));
-
-
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OutletScreen(
+                                            lat: latitude.toString(),
+                                            lang: longitude.toString()),
+                                      ));
                                 },
-                                child: Container(height: 50,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(border: Border.all()
-
-
-,borderRadius: BorderRadius.circular(15),
-                                  color:AppColors.gold
-                                ),
-                                  child: Center(child: Text('Order Now',style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),)),
+                                child: Container(
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(),
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: AppColors.gold),
+                                  child: Center(
+                                      child: Text(
+                                    'Order Now',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  )),
                                 ),
                               ),
-
-
 
                               // oyt let view commented
 //
@@ -706,55 +700,56 @@ else{
 //
 //
                               AppSpacerH(32.h),
-                              videeeo==null||videeeo==""  ? SizedBox():
+                              videeeo == null || videeeo == ""
+                                  ? SizedBox()
+                                  : InkWell(
+                                      onTap: () {
+                                        setState(() {
 
-
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _controller.value.isPlaying
-                                        ? _controller.pause()
-                                        : _controller.play();
-                                  });
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 180,
-                                  color: Colors.white70,
-                                  child: Stack(
-                                    children: [
-                                      Container(
+                                          _controller.value.isPlaying
+                                              ? _controller.pause()
+                                              : _controller.play();
+                                        });
+                                      },
+                                      child: Container(
                                         width:
                                             MediaQuery.of(context).size.width,
                                         height: 180,
                                         color: Colors.white70,
-                                        child:
-
-                                        Center(
-                                          child: _controller.value.isInitialized
-                                              ? AspectRatio(
-                                                  aspectRatio: _controller
-                                                      .value.aspectRatio,
-                                                  child:
-                                                      VideoPlayer(_controller),
-                                                )
-                                              : Container(),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 180,
+                                              color: Colors.white70,
+                                              child: Center(
+                                                child: _controller
+                                                        .value.isInitialized
+                                                    ? AspectRatio(
+                                                        aspectRatio: _controller
+                                                            .value.aspectRatio,
+                                                        child: VideoPlayer(
+                                                            _controller),
+                                                      )
+                                                    : Container(),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: 5,
+                                              left: 20,
+                                              child: Icon(
+                                                _controller.value.isPlaying
+                                                    ? Icons.pause
+                                                    : Icons.play_arrow,
+                                                size: 35,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Positioned(
-                                        top: 5,
-                                        left: 20,
-                                        child: Icon(
-                                          _controller.value.isPlaying
-                                              ? Icons.pause
-                                              : Icons.play_arrow,
-                                          size: 35,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    ),
 
                               // ref.watch(allServicesProvider).map(
                               //       initial: (_) => const SizedBox(),
@@ -861,7 +856,6 @@ else{
                               //
                               //
 
-
                               if (authBox.get('token') != null)
                                 ...ref.watch(allOrdersProvider).map(
                                       initial: (_) => [const SizedBox()],
@@ -870,7 +864,9 @@ else{
                                         if (_.data.data!.orders!.isEmpty) {
                                           return [
                                             // AppSpacerH(100.h),
-                                            SizedBox(height: 30,),
+                                            SizedBox(
+                                              height: 30,
+                                            ),
                                             MessageTextWidget(
                                               msg: S.of(context).noordrfnd,
                                             )
@@ -924,8 +920,6 @@ else{
 
                                                 return Column(
                                                   children: [
-
-
                                                     HomeOrderTile(data: data),
                                                     if (index ==
                                                         _.data.data!.orders!
@@ -950,14 +944,12 @@ else{
                             ],
                           ),
                         ),
-
-
-                        SizedBox(height: 70,),
+                        SizedBox(
+                          height: 70,
+                        ),
                       ],
                     ),
                   ),
-
-
                 ],
               );
             },
@@ -966,7 +958,6 @@ else{
       ),
     );
   }
-
 
   GetFrenchModel? getFrenchModel;
 
@@ -987,7 +978,7 @@ else{
       var finalresult = jsonDecode(result);
       if (finalresult['message'] == "Franchise") {
         var finalresult1 =
-        GetFrenchModel.fromJson(finalresult as Map<String, dynamic>);
+            GetFrenchModel.fromJson(finalresult as Map<String, dynamic>);
 
         setState(() {
           getFrenchModel = finalresult1;
@@ -998,7 +989,6 @@ else{
       print(response.reasonPhrase);
     }
   }
-
 
   List<String> images = [
     'assets/images/dim_00.png',
@@ -1034,417 +1024,350 @@ else{
 
 //other class
 
-
 class OutletScreen extends StatefulWidget {
-  String?lat;
-  String?lang;
-  OutletScreen({Key? key,this.lat,this.lang}) : super(key: key);
+  String? lat;
+  String? lang;
+  OutletScreen({Key? key, this.lat, this.lang}) : super(key: key);
 
   @override
   State<OutletScreen> createState() => _OutletScreenState();
 }
 
 class _OutletScreenState extends State<OutletScreen> {
-  TextEditingController searchController=TextEditingController();
+  TextEditingController searchController = TextEditingController();
   var latee;
- var longaa;
+  var longaa;
 
- bool loading =false;
+  bool loading = false;
   @override
   void initState() {
     // TODO: implement initState
 
     print('lat===================${widget.lat}');
     print('lang===================${widget.lang}');
-setState(() {
-  latee=widget.lat;
-  longaa=widget.lang;
-});
+    setState(() {
+      latee = widget.lat;
+      longaa = widget.lang;
+    });
     getOutlet();
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-appBar: AppBar(
-centerTitle: true,
- title: Text('Outlets'),
-),
-      body: SingleChildScrollView(child: Padding(
-        padding: EdgeInsets.all(15),
-        child:
-
-        Column(children: [
-
-TextField(
-  readOnly: true,
-  onTap: () {
-
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PlacePicker(
-          // apiKey:"AIzaSyBl2FY2AnfX6NwR4LlOOlT9dDve0VwQLAA",
-          apiKey:"AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
-
-          onPlacePicked: (result) {
-            print(result.formattedAddress);
-            setState(() {
-              searchController.text =
-                  result.formattedAddress.toString();
-              latee = result.geometry!.location.lat;
-              longaa = result.geometry!.location.lng;
-
-            });
-
-            Navigator.of(context).pop();
-          },
-          initialPosition: LatLng(
-              22.719568,75.857727),
-          useCurrentLocation: true,
-        ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Outlets'),
       ),
-    ).then((value) {
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(15),
+          child: Column(children: [
+            TextField(
+              readOnly: true,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlacePicker(
+                      // apiKey:"AIzaSyBl2FY2AnfX6NwR4LlOOlT9dDve0VwQLAA",
+                      apiKey: "AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
 
-      getOutlet();
-    });
+                      onPlacePicked: (result) {
+                        print(result.formattedAddress);
+                        setState(() {
+                          searchController.text =
+                              result.formattedAddress.toString();
+                          latee = result.geometry!.location.lat;
+                          longaa = result.geometry!.location.lng;
+                        });
 
-  },
+                        Navigator.of(context).pop();
+                      },
+                      initialPosition: LatLng(22.719568, 75.857727),
+                      useCurrentLocation: true,
+                    ),
+                  ),
+                ).then((value) {
+                  getOutlet();
+                });
+              },
+              controller: searchController,
+              decoration: InputDecoration(
+                  hintText: 'Please Enter Location',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(), //<-- SEE HERE
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                    size: 30,
+                  )),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Text(
+                  'Outlets',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            loading
+                ? Container(
+                    height: 100,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : getOutletModel!.data!.outlets!.isEmpty
+                    ? Container(
+                        height: 100,
+                        child: Center(
+                          child: Text(
+                            S.of(context).getnoOutLet,
+                            style: AppTextDecor.osRegular14black,
+                          ),
+                        ))
+                    : Container(
+                        height: 260,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: AlwaysScrollableScrollPhysics(),
+                          shrinkWrap: true,
 
-  controller: searchController,
-  decoration: InputDecoration(
-hintText: 'Please Enter Location',
+                          //itemCount:outletList.length,
+                          itemCount: getOutletModel?.data?.outlets?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              child: Container(
+                                width: 110,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          // print(
+                                          //     "token========================${authBox.get('token')}");
 
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-          ), //<-- SEE HERE
-    ),
-    prefixIcon: Icon(Icons.search,color: Colors.black,size: 30,)
+                                          print(
+                                              "OUT LET ID===============${getOutletModel?.data?.outlets?[index].id}");
 
-  ),
-),
-SizedBox(height: 20,),
+                                          setState(() {
+                                            outletid =
+                                                '${getOutletModel?.data?.outlets?[index].id}';
+                                          });
 
-          Row(children: [Text('Outlets',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)],),
-          SizedBox(height: 10,),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Servicess(
+                                                  venderId: outletid.toString(),
+                                                ),
+                                              ));
+                                        },
+                                        child: Column(children: [
+                                          Container(
+                                            height: 70,
+                                            //decoration: BoxDecoration(image: DecorationImage(image: AssetImage('${outletList[index]['image']}'),fit: BoxFit.fill)),
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        '${getOutletModel?.data?.outlets?[index].profilePhotoId}'),
+                                                    fit: BoxFit.fill)),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Name',
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                  width: 100,
 
-          loading
-
-                                  ? Container(
-                                      height: 100,
-                                      child: Center(
-                                          child: CircularProgressIndicator()),
-                                    )
-                                  : getOutletModel!.data!.outlets!.isEmpty
-                                      ? Container(
-                                          height: 100,
-                                          child: Center(
-                                            child: Text(
-                                              S.of(context).getnoOutLet,
-                                              style:
-                                                  AppTextDecor.osRegular14black,
+                                                  //child: Text('Address: ${outletList[index]['address']}',style: TextStyle(fontSize: 10),)),
+                                                  child: Text(
+                                                    '${getOutletModel?.data?.outlets?[index].name}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  )),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                        ]),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          openMap(
+                                              '${getOutletModel?.data?.outlets?[index].address}');
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Address',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Icon(
+                                                  Icons.location_on,
+                                                  color: AppColors.black,
+                                                  size: 15,
+                                                ),
+                                              ],
                                             ),
-                                          )):
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                    width: 100,
 
+                                                    //child: Text('Address: ${outletList[index]['address']}',style: TextStyle(fontSize: 10),)),
 
-          Container(
-                                          height: 260,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            physics:
-                                                AlwaysScrollableScrollPhysics(),
-                                            shrinkWrap: true,
+                                                    child: Text(
+                                                      '${getOutletModel?.data?.outlets?[index].address}' ??
+                                                          "",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 10),
+                                                    )),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            // Row(
+                                            //   children: [
+                                            //     Spacer(),
+                                            //     Icon(
+                                            //       Icons
+                                            //           .location_on,
+                                            //       color: AppColors
+                                            //           .black,
+                                            //     ),
+                                            //   ],
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          // print(
+                                          //     "token========================${authBox.get('token')}");
+                                          print(
+                                              "OUTLET ID===============${getOutletModel?.data?.outlets?[index].id}");
 
-                                            //itemCount:outletList.length,
-                                            itemCount: getOutletModel
-                                                    ?.data?.outlets?.length ??
-                                                0,
-                                            itemBuilder: (context, index) {
-                                              return Card(
-                                                child: Container(
-                                                  width: 110,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Column(
-                                                      children: [
-
-                                                        InkWell(
-                                                          onTap: () {
-
-                                                            // print(
-                                                            //     "token========================${authBox.get('token')}");
-
-                                                            print(
-                                                                "OUT LET ID===============${getOutletModel?.data?.outlets?[index].id}");
-
-                                                            setState(()  {
-                                                              outletid =
-                                                                  '${getOutletModel?.data?.outlets?[index].id}';
-
-
-                                                            });
-
-
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      Servicess(
-                                                                          venderId:
-                                                                              outletid.toString(),
-
-                                                                      ),
-                                                                ));
-
-                                                            },
-                                                          child: Column(
-                                                              children: [
-                                                                Container(
-                                                                  height: 70,
-                                                                  //decoration: BoxDecoration(image: DecorationImage(image: AssetImage('${outletList[index]['image']}'),fit: BoxFit.fill)),
-                                                                  decoration: BoxDecoration(
-                                                                      image: DecorationImage(
-                                                                          image: NetworkImage(
-                                                                              '${getOutletModel?.data?.outlets?[index].profilePhotoId}'),
-                                                                          fit: BoxFit
-                                                                              .fill)),
-                                                                ),
-
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-
-
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      'Name',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    SizedBox(
-                                                                        width:
-                                                                            100,
-
-                                                                        //child: Text('Address: ${outletList[index]['address']}',style: TextStyle(fontSize: 10),)),
-                                                                        child:
-                                                                            Text(
-                                                                          '${getOutletModel?.data?.outlets?[index].name}',
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          maxLines:
-                                                                              1,
-                                                                          style:
-                                                                              TextStyle(fontSize: 10),
-                                                                        )),
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                              ]),
-                                                        ),
-
-
-                                                        InkWell(
-                                                          onTap: () {
-                                                            openMap(
-                                                                '${getOutletModel?.data?.outlets?[index].address}');
-                                                          },
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                children: [
-
-
-                                                                  Text(
-                                                                    'Address',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            10,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
-
-                                                                  Icon(
-                                                                    Icons
-                                                                        .location_on,
-                                                                    color: AppColors
-                                                                        .black,size: 15,
-                                                                  ),
-
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                      width:
-                                                                          100,
-
-                                                                      //child: Text('Address: ${outletList[index]['address']}',style: TextStyle(fontSize: 10),)),
-
-                                                                      child:
-                                                                          Text(
-                                                                        '${getOutletModel?.data?.outlets?[index].address}' ??
-                                                                            "",
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                        maxLines:
-                                                                            1,
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                10),
-                                                                      )),
-                                                                ],
-                                                              ),
-                                                              SizedBox(
-                                                                height: 5,
-                                                              ),
-                                                              // Row(
-                                                              //   children: [
-                                                              //     Spacer(),
-                                                              //     Icon(
-                                                              //       Icons
-                                                              //           .location_on,
-                                                              //       color: AppColors
-                                                              //           .black,
-                                                              //     ),
-                                                              //   ],
-                                                              // ),
-                                                            ],
-                                                          ),
-                                                        ),
-
-
-SizedBox(height: 5,),
-
-                                                        InkWell(
-                                                          onTap: () {
-
-
-
-                                                            // print(
-                                                            //     "token========================${authBox.get('token')}");
-                                                            print(
-                                                                "OUTLET ID===============${getOutletModel?.data?.outlets?[index].id}");
-
-                                                            setState(() {
-                                                              //outletid='${outletList[index]['id']}';
-                                                              outletid =
-                                                              '${getOutletModel?.data?.outlets?[index].id}';
-                                                            });
+                                          setState(() {
+                                            //outletid='${outletList[index]['id']}';
+                                            outletid =
+                                                '${getOutletModel?.data?.outlets?[index].id}';
+                                          });
 //print("===============${outletList[index]['id']}");
 
-
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      Frenchies(
-                                                                          venderId:
-                                                                          outletid.toString()),
-                                                                ));
-
-
-
-
-
-                                                            },
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  Text(
-                                                                    'Near By',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                        10,
-                                                                        fontWeight:
-                                                                        FontWeight.bold),
-                                                                  ),
-                                                                ],
-                                                              ),
-
-
-                                                            ],
-                                                          ),
-                                                        ),
-
-SizedBox(height: 10,),
-
-                                                        InkWell(
-                                                          onTap: () {
-
-                                                            // print(
-                                                            //     "token========================${authBox.get('token')}");
-
-                                                            print(
-                                                                "OUT LET ID===============${getOutletModel?.data?.outlets?[index].id}");
-
-                                                            setState(()  {
-                                                              outletid =
-                                                              '${getOutletModel?.data?.outlets?[index].id}';
-
-
-                                                            });
-
-
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      Servicess(
-                                                                        venderId:
-                                                                        outletid.toString(),
-
-                                                                      ),
-                                                                ));
-
-
-                                                          },
-                                                          child: Container(
-
-                                                            height: 30,
-                                                            decoration: BoxDecoration(border: Border.all( )),
-                                                            child: Center(child: Text('Order Now',style: TextStyle(
-                                                              fontSize:
-                                                              10,
-                                                              fontWeight:
-                                                              FontWeight.bold),),),),
-                                                        ),
-
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-
-
-                                                      ],
-                                                    ),
-                                                  ),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Frenchies(
+                                                    venderId:
+                                                        outletid.toString()),
+                                              ));
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Near By',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                              );
-                                            },
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          // print(
+                                          //     "token========================${authBox.get('token')}");
+
+                                          print(
+                                              "OUT LET ID===============${getOutletModel?.data?.outlets?[index].id}");
+
+                                          setState(() {
+                                            outletid =
+                                                '${getOutletModel?.data?.outlets?[index].id}';
+                                          });
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Servicess(
+                                                  venderId: outletid.toString(),
+                                                ),
+                                              ));
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                              border: Border.all()),
+                                          child: Center(
+                                            child: Text(
+                                              'Order Now',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
-
-
-        ]),
-      ),)
-
-
-      ,);
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+          ]),
+        ),
+      ),
+    );
   }
-
 
   Future<void> openMap(String address) async {
     final query = Uri.encodeComponent(address);
@@ -1454,20 +1377,11 @@ SizedBox(height: 10,),
 
   GetOutletModel? getOutletModel;
 
-  void searchOutletApi(){
-
-
-
-
-
-  }
+  void searchOutletApi() {}
 
   Future<void> getOutlet() async {
-
     loading = true;
-    setState(() {
-
-    });
+    setState(() {});
     var request = http.Request(
         'GET',
         Uri.parse(
@@ -1485,19 +1399,15 @@ SizedBox(height: 10,),
       setState(() {
         getOutletModel = finalresult;
         loading = false;
-
       });
     } else {
       loading = false;
 
-      setState(() {
-
-      });
+      setState(() {});
       print(response.reasonPhrase);
     }
   }
 }
-
 
 //other class
 
@@ -1518,10 +1428,9 @@ class _ServicessState extends ConsumerState<Servicess> {
     print('venderId============${widget.venderId.toString()}');
     print('frenchId============${widget.frenchId.toString()}');
 
-    if(widget.frenchId.toString()=='null'){
-
+    if (widget.frenchId.toString() == 'null') {
       setState(() {
-        frenchId=0;
+        frenchId = 0;
       });
 
       print('french Id null case=======================${frenchId}');
@@ -1663,9 +1572,6 @@ class _ServicessState extends ConsumerState<Servicess> {
                                 style: AppTextDecor.osBold24black,
                               ),
                               AppSpacerH(12.h),
-
-
-
                               ref
                                   .watch(allServicesProvider(
                                       widget.venderId.toString()))
@@ -1708,9 +1614,8 @@ class _ServicessState extends ConsumerState<Servicess> {
                                                 child: HomeTabCard(
                                                   service: entry.value,
                                                   ontap: () {
-
-
-                                                    print("==============ggggtab");
+                                                    print(
+                                                        "==============ggggtab");
 
                                                     ref.refresh(
                                                       servicesVariationsProvider(
@@ -1730,7 +1635,7 @@ class _ServicessState extends ConsumerState<Servicess> {
 
                                                     context.nav.pushNamed(
                                                       Routes.chooseItemScreen,
-                                                       //arguments: [entry.value,widget.frenchId,widget.venderId],
+                                                      //arguments: [entry.value,widget.frenchId,widget.venderId],
                                                       arguments: entry.value,
                                                     );
                                                     // Navigator.push(context, MaterialPageRoute(builder: ChooseItems(service:entry.value ,VenderId: widget.venderId,frenchId: widget.frenchId,)));
@@ -1793,7 +1698,7 @@ class _ServicessState extends ConsumerState<Servicess> {
             '${AppConfig.baseUrl}/services?vendore_id=${widget.venderId}'));
 
     http.StreamedResponse response = await request.send();
-
+    print("===my technic=======${request.url}===============");
     if (response.statusCode == 200) {
       var result = await response.stream.bytesToString();
       var finalResult =
@@ -1985,9 +1890,7 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
                                                     .osRegular14black,
                                               ),
                                             ))
-                                        :
-
-                                    Container(
+                                        : Container(
                                             height: 230,
                                             child: ListView.builder(
                                               scrollDirection: Axis.horizontal,
@@ -2008,8 +1911,6 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
                                                         children: [
                                                           InkWell(
                                                             onTap: () {
-
-
                                                               setState(() {
                                                                 frenchId = getFrenchModel
                                                                     ?.data
@@ -2027,10 +1928,8 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
                                                                             outletid
                                                                                 .toString(),
                                                                         frenchId:
-                                                                        frenchId.toString()),
+                                                                            frenchId.toString()),
                                                                   ));
-
-
                                                             },
                                                             child: Column(
                                                                 children: [
@@ -2052,90 +1951,102 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
                                                                           decoration:
                                                                               BoxDecoration(image: DecorationImage(image: NetworkImage('${getFrenchModel?.data.franchise?[index].profilePhotoId}'), fit: BoxFit.fill)),
                                                                         ),
-
                                                                   SizedBox(
                                                                     height: 10,
                                                                   ),
                                                                   Row(
                                                                     children: [
-                                                                      Text('Name',style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),),
+                                                                      Text(
+                                                                        'Name',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                10,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
                                                                     ],
                                                                   ),
-
                                                                   Row(
                                                                     children: [
                                                                       Text(
                                                                         '${getFrenchModel?.data.franchise?[index].firstName}',
                                                                         overflow:
-                                                                            TextOverflow
-                                                                                .ellipsis,
-                                                                        maxLines: 1,
+                                                                            TextOverflow.ellipsis,
+                                                                        maxLines:
+                                                                            1,
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 10),
                                                                       ),
                                                                     ],
                                                                   ),
-
                                                                   SizedBox(
                                                                     height: 10,
                                                                   ),
                                                                 ]),
                                                           ),
-
                                                           InkWell(
                                                             onTap: () {
-
                                                               // openMap('${getOutletModel?.data?.outlets?[index].address}');
-
                                                             },
-                                                            child: Column(children: [
+                                                            child: Column(
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'Address',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .location_on,
+                                                                      color: AppColors
+                                                                          .black,
+                                                                      size: 15,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                        width:
+                                                                            100,
 
+                                                                        //child: Text('Address: ${outletList[index]['address']}',style: TextStyle(fontSize: 10),)),
 
-                                                              Row(
-                                                                children: [
-
-
-                                                                  Text('Address',style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),),
-                                                                  Icon(Icons.location_on,color: AppColors.black,size: 15,),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                children: [
-
-
-                                                                  SizedBox(
-                                                                      width: 100,
-
-                                                                      //child: Text('Address: ${outletList[index]['address']}',style: TextStyle(fontSize: 10),)),
-
-                                                                      child:
-
-                                                                      getFrenchModel?.data.franchise?[index].address=='null'?
-                                                                      Text('',overflow: TextOverflow.ellipsis,maxLines: 1,style: TextStyle(fontSize: 10),)
-                                                                     : Text('${getFrenchModel?.data.franchise?[index].address??''}',overflow: TextOverflow.ellipsis,maxLines: 1,style: TextStyle(fontSize: 10),)
-
-
-
-
-                                                                  ),
-
-
-                                                                ],
-                                                              ),
-                                                            ],),
+                                                                        child: getFrenchModel?.data.franchise?[index].address ==
+                                                                                'null'
+                                                                            ? Text(
+                                                                                '',
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                maxLines: 1,
+                                                                                style: TextStyle(fontSize: 10),
+                                                                              )
+                                                                            : Text(
+                                                                                '${getFrenchModel?.data.franchise?[index].address ?? ''}',
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                maxLines: 1,
+                                                                                style: TextStyle(fontSize: 10),
+                                                                              )),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                          SizedBox(height: 10,),
-
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
                                                           InkWell(
                                                             onTap: () {
-
-
                                                               setState(() {
                                                                 frenchId = getFrenchModel
                                                                     ?.data
                                                                     .franchise?[
-                                                                index]
+                                                                        index]
                                                                     .id
                                                                     .toString();
                                                               });
@@ -2145,31 +2056,34 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
                                                                   MaterialPageRoute(
                                                                     builder: (context) => Servicess(
                                                                         venderId:
-                                                                        outletid
-                                                                            .toString(),
+                                                                            outletid
+                                                                                .toString(),
                                                                         frenchId:
-                                                                        frenchId.toString()),
+                                                                            frenchId.toString()),
                                                                   ));
-
-
                                                             },
                                                             child: Container(
-
                                                               height: 30,
-                                                              decoration: BoxDecoration(border: Border.all( )),
-                                                              child: Center(child: Text('Order Now',style: TextStyle(
-                                                                  fontSize:
-                                                                  10,
-                                                                  fontWeight:
-                                                                  FontWeight.bold),),),),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      border: Border
+                                                                          .all()),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Order Now',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ),
-
                                                           SizedBox(
                                                             height: 5,
                                                           ),
-
-
-
                                                         ],
                                                       ),
                                                     ),
@@ -2212,7 +2126,7 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
       var finalresult = jsonDecode(result);
       if (finalresult['message'] == "Franchise") {
         var finalresult1 =
-        GetFrenchModel.fromJson(finalresult as Map<String, dynamic>);
+            GetFrenchModel.fromJson(finalresult as Map<String, dynamic>);
 
         setState(() {
           getFrenchModel = finalresult1;
@@ -2223,7 +2137,4 @@ class _FrenchiesState extends ConsumerState<Frenchies> {
       print(response.reasonPhrase);
     }
   }
-
 }
-
-

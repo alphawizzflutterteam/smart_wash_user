@@ -91,7 +91,7 @@ Route generatedRoutes(RouteSettings settings) {
       break;
     case Routes.recoverPassWordStageTwo:
       child = RecoverPasswordStageTwo(
-        forEmailorPhone: settings.arguments! as String,
+        forEmailorPhone: settings.arguments! as List,
       );
       break;
     case Routes.recoverPassWordStageThree:

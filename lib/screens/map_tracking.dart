@@ -267,7 +267,7 @@ class _UserMapScreenState extends State<UserMapScreen> {
 
   List<Polyline> polyLines = [];
 
-  late double bearing ;
+   double? bearing=0.0 ;
   double dNewLat = 22.7533 ;
   double dNewLong =75.8937 ;
 
@@ -291,7 +291,7 @@ class _UserMapScreenState extends State<UserMapScreen> {
         dNewLong = document.get('long') as double; // Replace with your field name
         driverLocation = LatLng(dNewLat, dNewLong);
         bearing = getBearing( LatLng(dNewLat, dNewLong),  LatLng(double.parse(widget.userlat ?? '0.0'),double.parse(widget.userlong ?? '0.0')));
-
+        init();
         print('${dNewLat}_______');
         print('${dNewLong}_______');
 
@@ -336,7 +336,7 @@ class _UserMapScreenState extends State<UserMapScreen> {
     userLocation = LatLng(double.parse(widget.userlat ?? '0.0'),double.parse(widget.userlong ?? '0.0'));
 
     _startTimer();
-    // init();
+
 
 
     BitmapDescriptor.fromAssetImage(
@@ -384,13 +384,14 @@ class _UserMapScreenState extends State<UserMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            onPressed: (){
-              init();
-            },
-            child: const Icon(Icons.directions)),
+        // floatingActionButton: FloatingActionButton(
+        //     onPressed: (){
+        //       init();
+        //     },
+        //     child: const Icon(Icons.directions)),
         body:
-        dNewLong==0.0?
+        bearing==0.0?
+
         Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -409,7 +410,7 @@ class _UserMapScreenState extends State<UserMapScreen> {
                 icon: myIcon ?? BitmapDescriptor.defaultMarker,
                 anchor: const Offset(0.5, 0.5),
                 flat: true,
-                 rotation: bearing,
+                 rotation: bearing??0.0,
                 draggable: false),
             Marker(
               markerId: const MarkerId('driverMarker'),
