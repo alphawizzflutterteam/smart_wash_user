@@ -1,21 +1,17 @@
 import 'dart:convert';
-import 'dart:ffi';
-
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dry_cleaners/constants/app_box_decoration.dart';
 import 'package:dry_cleaners/constants/app_colors.dart';
 import 'package:dry_cleaners/constants/app_text_decor.dart';
 import 'package:dry_cleaners/constants/hive_contants.dart';
 import 'package:dry_cleaners/generated/l10n.dart';
 import 'package:dry_cleaners/misc/global_functions.dart';
-import 'package:dry_cleaners/misc/misc_global_variables.dart';
 import 'package:dry_cleaners/models/hive_cart_item_model.dart';
 import 'package:dry_cleaners/models/order_details_model/product.dart';
-import 'package:dry_cleaners/providers/misc_providers.dart';
 import 'package:dry_cleaners/providers/order_providers.dart';
-import 'package:dry_cleaners/providers/order_update_provider.dart';
 import 'package:dry_cleaners/screens/order/order_dialouges.dart';
 import 'package:dry_cleaners/utils/context_less_nav.dart';
-import 'package:dry_cleaners/widgets/buttons/button_with_icon.dart';
 import 'package:dry_cleaners/widgets/buttons/order_cancel_button.dart';
 import 'package:dry_cleaners/widgets/dashed_line.dart';
 import 'package:dry_cleaners/widgets/global_functions.dart';
@@ -28,9 +24,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-
+import 'package:dio/dio.dart';
 import '../../constants/config.dart';
 import '../../utils/routes.dart';
 import '../map_tracking.dart';
@@ -40,7 +38,6 @@ class OrderDetails extends ConsumerWidget {
     super.key,
     required this.orderID,
   });
-
 
   final String orderID;
   final Box cartsBox = Hive.box(AppHSC.cartBox);
@@ -74,8 +71,6 @@ class OrderDetails extends ConsumerWidget {
                   ],
                 ),
               ),
-
-
               Container(
                 height: 724.h,
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -85,17 +80,15 @@ class OrderDetails extends ConsumerWidget {
                       loaded: (_) {
                         print(_.data.data!.order!.deliveryCharge.runtimeType);
                         print(_.data.data!.order!.totalAmount.runtimeType);
-                        double?totalAmounttt;
-                        if(_.data.data!.order!.deliveryCharge==0 &&_.data.data!.order!.discount==0)
-                          {
-                            totalAmounttt=_.data.data!.order!.totalAmount;
-                          }
-                        else{
-
-                          totalAmounttt = _.data.data!.order!.totalAmount! + _.data.data!.order!.deliveryCharge!.toDouble() - _.data.data!.order!.discount!.toDouble();
-
+                        double? totalAmounttt;
+                        if (_.data.data!.order!.deliveryCharge == 0 &&
+                            _.data.data!.order!.discount == 0) {
+                          totalAmounttt = _.data.data!.order!.totalAmount;
+                        } else {
+                          totalAmounttt = _.data.data!.order!.totalAmount! +
+                              _.data.data!.order!.deliveryCharge!.toDouble() -
+                              _.data.data!.order!.discount!.toDouble();
                         }
-
 
                         final List<OrderDetailsTile> orderWidgets = [];
                         final List<CarItemHiveModel> products = [];
@@ -105,7 +98,8 @@ class OrderDetails extends ConsumerWidget {
                           var subproductprice = 0;
                           for (final subproduct
                               in _.data.data!.order!.products![i].sbproducts!) {
-                            for (final orderedsubproduct in _.data.data!.order!.orderSubProduct!) {
+                            for (final orderedsubproduct
+                                in _.data.data!.order!.orderSubProduct!) {
                               if (subproduct.id == orderedsubproduct.id) {
                                 subproductprice = orderedsubproduct.price!;
                               }
@@ -130,7 +124,6 @@ class OrderDetails extends ConsumerWidget {
                             productsImage:
                                 _.data.data!.order!.products![i].imagePath ??
                                     '',
-
                             productsQTY: _.data.data!.order!.quantity!
                                 .quantity[i].quantity,
                             unitPrice:
@@ -146,7 +139,6 @@ class OrderDetails extends ConsumerWidget {
                           padding: EdgeInsets.zero,
                           children: [
                             AppSpacerH(10.h),
-
 
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -177,15 +169,13 @@ class OrderDetails extends ConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
                                   Row(
                                     children: [
                                       InkWell(
                                         onTap: () {
-
                                           // context.nav.pushNamed(
                                           //   Routes.trackScreen,
-                                         // );
+                                          // );
                                           // context.nav.pushNamed(
                                           //   Routes.chooseItemScreen,
                                           // );
@@ -202,8 +192,6 @@ class OrderDetails extends ConsumerWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-
-
                                           Text(
                                             _.data.data!.order!.customer!.user!
                                                 .name!,
@@ -221,24 +209,27 @@ class OrderDetails extends ConsumerWidget {
                                               style:
                                                   AppTextDecor.osRegular14black,
                                             ),
-
-
-                                          SizedBox(height: 20,),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
                                           Text(
                                             S.of(context).shpngadrs,
                                             style: AppTextDecor.osBold14black,
                                           ),
-                                          SizedBox(height: 10,),
-
-
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width/1.8,
+                                            height: 10,
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                1.8,
                                             child: Text(
                                               _.data.data!.order!.address!
-                                                  .area ??
+                                                      .area ??
                                                   '',
                                               style:
-                                              AppTextDecor.osRegular14black,
+                                                  AppTextDecor.osRegular14black,
                                             ),
                                           ),
                                           Text(
@@ -263,67 +254,64 @@ class OrderDetails extends ConsumerWidget {
                               ),
                             ),
 
+                            AppSpacerH(15.h),
+
+                            _.data.data!.order!.orderStatus ==
+                                        "Picked your order" &&
+                                    _.data.data!.order!.drivers!.isNotEmpty
+                                ? InkWell(
+                                    onTap: () {
+                                      print(_.data.data!.order!.orderStatus);
+                                      print(_.data.data!.order!.drivers);
+
+                                      print(_.data.data!.order!.drivers![0]
+                                          .userId);
+
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => UserMapScreen(
+                                              driverId: _.data.data!.order!
+                                                  .drivers![0].userId,
+                                              userlat: _.data.data!.order!
+                                                  .address!.latitude
+                                                  .toString(),
+                                              userlong: _.data.data!.order!
+                                                  .address!.longitude
+                                                  .toString(),
+                                            ),
+                                          ));
+                                    },
+                                    child: Card(
+                                      elevation: 3,
+                                      child: Container(
+                                        height: 40,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Center(
+                                            child: Text('Track To Driver')),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
 
                             AppSpacerH(15.h),
 
-                              _.data.data!.order!.orderStatus=="Picked your order"&&_.data.data!.order!.drivers!.isNotEmpty?
-
                             InkWell(
-
-                              onTap: () {
-
-print(_.data.data!.order!.orderStatus);
-print(_.data.data!.order!.drivers);
-
-print(_.data.data!.order!.drivers![0].userId);
-
-Navigator.push(context, MaterialPageRoute(builder: (context) => UserMapScreen(
-
-
-  driverId:_.data.data!.order!.drivers![0].userId,
-  userlat: _.data.data!.order!.address!.latitude.toString(),
-  userlong: _.data.data!.order!.address!.longitude.toString(),
-),));
-
-
-
-
-                              },
-
-
-                              child: Card(
-                                elevation: 3,
-                                child: Container(
-                              height: 40,
-
-                                width: MediaQuery.of(context).size.width,
-                                child: Center(child: Text('Track To Driver')),),),
-
-                            )
-
-                             :
-                         SizedBox(),
-
-                            AppSpacerH(15.h),
-
-
-                            InkWell(
-
                               onTap: () {
                                 downlodInvoice();
-
                               },
                               child: Card(
                                 elevation: 3,
                                 child: Container(
                                   height: 40,
-
                                   width: MediaQuery.of(context).size.width,
-                                  child: Center(child:
-
-
-                                  timeee==1?Text('Waiting...'):
-                                  Text('Download Invoice')),),),
+                                  child: Center(
+                                      child: timeee == 1
+                                          ? Text('Waiting...')
+                                          : Text('Download Invoice')),
+                                ),
+                              ),
                             ),
                             AppSpacerH(15.h),
                             Container(
@@ -373,7 +361,7 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => UserMapScreen(
                                       AppGFunctions.tableTextRow(
                                         title: S.of(context).delivertpe,
                                         data:
-                                        '${_.data.data!.order!.delivertype}',
+                                            '${_.data.data!.order!.delivertype}',
                                       ),
                                       AppGFunctions.tableTextRow(
                                         title: S.of(context).sbttl,
@@ -404,18 +392,17 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => UserMapScreen(
                                       ),
                                       Text(
                                         '${settingsBox.get('currency') ?? '\$'}'
-                                            //'${_.data.data!.order!.totalAmount}',
-                                            '${totalAmounttt}',
+                                        //'${_.data.data!.order!.totalAmount}',
+                                        '${totalAmounttt}',
                                         style: AppTextDecor.osBold14black,
                                       ),
                                     ],
                                   )
-
                                 ],
                               ),
                             ),
                             // AppSpacerH(15.h),
-                // MARK: Order update options
+                            // MARK: Order update options
 
                             // if (_.data.data?.order?.orderStatus == 'Pending')
                             //   AppIconTextButton(
@@ -475,8 +462,6 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => UserMapScreen(
                       ),
                     ),
               ),
-
-
             ],
           ),
         ),
@@ -484,57 +469,75 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => UserMapScreen(
     );
   }
 
-  var timeee=0;
+  var timeee = 0;
   var tokenn;
   var tokentype;
   Future<void> downlodInvoice() async {
-
-    timeee=1;
-
-
+    timeee = 1;
     tokenn = Hive.box(AppHSC.authBox);
-
     if (tokenn!.get(AppHSC.authToken) != null &&
-        tokenn!.get(AppHSC.authToken) != '') {
-
-    }
+        tokenn!.get(AppHSC.authToken) != '') {}
     final String token = tokenn!.get(AppHSC.authToken) as String;
     final String tokenType = tokenn!.get(AppHSC.authTokenType) as String;
 
-
     var headers = {
-      'Authorization': '$tokenType $token',};
-    var request = http.Request('POST', Uri.parse('${AppConfig.baseUrl}/getinvoice/${orderID}'));
+      'Authorization': '$tokenType $token',
+    };
+    var request = http.Request(
+        'POST', Uri.parse('${AppConfig.baseUrl}/getinvoice/${orderID}'));
 
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
     print(request.url);
     if (response.statusCode == 200) {
-      var result =await response.stream.bytesToString();
-      var finalresult=jsonDecode(result);
+      var result = await response.stream.bytesToString();
+      var finalresult = jsonDecode(result);
 
+      urlpdg = finalresult['pdf_url'];
+      print(
+          "===my technic=======${AppConfig.baseUrl}/getinvoice/${orderID}==============");
+      print("invoice================${urlpdg}");
+      downloadPdf();
 
-        urlpdg=finalresult['pdf_url'];
-print("===my technic=======${AppConfig.baseUrl}/getinvoice/${orderID}==============");
-        print("invoice================${urlpdg}");
-      launch(urlpdg.toString());
-
-      timeee=0;
-
-    }
-    else {
+      timeee = 0;
+    } else {
       print(response.reasonPhrase);
     }
-
   }
-
-  var urlpdg;
-
-
-
 }
 
+var urlpdg;
+Directory? dir;
+downloadPdf() async {
+  Dio dio = Dio();
+  try {
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      String fileName = urlpdg.toString().split('/').last;
+      print("FileName: $fileName");
+      dir = Directory('/storage/emulated/0/Download/'); // for android
+      if (!await dir!.exists()) dir = await getExternalStorageDirectory();
+      String path = "${dir?.path}$fileName";
+      await dio.download(
+        urlpdg.toString(),
+        path,
+        onReceiveProgress: (recivedBytes, totalBytes) {
+          print(recivedBytes);
+        },
+        deleteOnError: true,
+      ).then((value) async {
+        Fluttertoast.showToast(msg: 'Invoice Downloaded !');
+        await Share.shareXFiles([XFile(path)], text: fileName);
+      });
+    } else {
+      launch(urlpdg.toString());
+    }
+  } catch (e, stackTrace) {
+    print(stackTrace);
+    throw Exception(e);
+  }
+}
 
 class OrderDetailsTile extends StatelessWidget {
   const OrderDetailsTile({
@@ -583,7 +586,6 @@ class OrderDetailsTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       Expanded(
                         child: Text(
                           product.service?.name ?? '',
@@ -594,9 +596,7 @@ class OrderDetailsTile extends StatelessWidget {
                       Text(
                         '${qty}x${settingsBox.get('currency') ?? '\$'}${product.currentPrice! + (subprice != null ? subprice! : 0)} ',
                         style: AppTextDecor.osRegular12navy,
-
                       ),
-
                     ],
                   )
                 ],

@@ -15,21 +15,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 // ignore: must_be_immutable
-class RecoverPasswordStageTwo extends StatelessWidget {
-  final formKey = GlobalKey<FormState>();
-  TextEditingController textEditingController = TextEditingController();
+class RecoverPasswordStageTwo extends StatefulWidget {
   final List forEmailorPhone;
 
   RecoverPasswordStageTwo({super.key, required this.forEmailorPhone});
 
   @override
+  State<RecoverPasswordStageTwo> createState() =>
+      _RecoverPasswordStageTwoState();
+}
+
+class _RecoverPasswordStageTwoState extends State<RecoverPasswordStageTwo> {
+  final formKey = GlobalKey<FormState>();
+
+  TextEditingController textEditingController = TextEditingController();
+  initState() {
+    super.initState();
+    textEditingController.text = widget.forEmailorPhone[1].toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return
-
-
-
-
-      LoginScreenWrapper(
+    return LoginScreenWrapper(
       child: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.fromLTRB(20.w, 44.h, 20.w, 0),
@@ -49,11 +56,11 @@ class RecoverPasswordStageTwo extends StatelessWidget {
               ),
               AppSpacerH(5.h),
               Text(
-                '${S.of(context).ndgtotp} ${forEmailorPhone[0]}',
+                '${S.of(context).ndgtotp} ${widget.forEmailorPhone[0]}',
                 style: AppTextDecor.osRegular18black,
               ),
               Text(
-                'OTP : ${forEmailorPhone[1]}',
+                'OTP : ${widget.forEmailorPhone[1]}',
                 style: AppTextDecor.osRegular18black,
               ),
               AppSpacerH(44.h),
@@ -122,7 +129,7 @@ class RecoverPasswordStageTwo extends StatelessWidget {
                                                   forgotPassProvider.notifier,
                                                 )
                                                 .forgotPassword(
-                                                  "${forEmailorPhone[0]}",
+                                                  "${widget.forEmailorPhone[0]}",
                                                 );
 
                                             ref
@@ -205,7 +212,7 @@ class RecoverPasswordStageTwo extends StatelessWidget {
                                             .notifier,
                                       )
                                       .verifyOtp(
-                                        "${forEmailorPhone[0]}",
+                                        "${widget.forEmailorPhone[0]}",
                                         textEditingController.text,
                                       );
                                 },

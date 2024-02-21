@@ -33,6 +33,8 @@ final privacyProvider =
         (ref) {
   return PrivacyPolicyNotifier(ref.watch(settingsRepoProvider));
 });
+
+
 //
 //
 //

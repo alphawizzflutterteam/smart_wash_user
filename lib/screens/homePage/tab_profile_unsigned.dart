@@ -197,8 +197,6 @@ class UsignedUserTab extends ConsumerWidget {
                         ],
                       ),
                     ),
-
-
                   SizedBox(
                     child: Column(
                       children: [
@@ -271,7 +269,14 @@ class UsignedUserTab extends ConsumerWidget {
                             context.nav.pushNamed(Routes.aboutUsScreen);
                           },
                         ),
-
+                        CustomTile(
+                          title: 'FAQs',
+                          icon: Icons.help,
+                          hasBorder: authBox.get('token') != null,
+                          ontap: () {
+                            context.nav.pushNamed(Routes.FaqScreen);
+                          },
+                        ),
 
                         if (authBox.get('token') != null)
                           CustomTile(
@@ -300,20 +305,20 @@ class UsignedUserTab extends ConsumerWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      S.of(context).urabttolgot,
+                                                      'Are You Sure You Want To \nLog Out?',
                                                       style: AppTextDecor
                                                           .osSemiBold18black,
                                                       textAlign:
                                                           TextAlign.center,
                                                     ),
                                                     AppSpacerH(10.h),
-                                                    Text(
-                                                      S.of(context).arusre,
-                                                      style: AppTextDecor
-                                                          .osRegular14black,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
+                                                    // Text(
+                                                    //   S.of(context).arusre,
+                                                    //   style: AppTextDecor
+                                                    //       .osRegular14black,
+                                                    //   textAlign:
+                                                    //       TextAlign.center,
+                                                    // ),
                                                     AppSpacerH(10.h),
                                                     SizedBox(
                                                       height: 50.h,
@@ -346,18 +351,12 @@ class UsignedUserTab extends ConsumerWidget {
                                                                   .of(context)
                                                                   .y,
                                                               onTap: () {
-
-
-
-
                                                                 ref
                                                                     .watch(
                                                                       logOutProvider
                                                                           .notifier,
                                                                     )
                                                                     .logout();
-
-
                                                               },
                                                             ),
                                                           ),

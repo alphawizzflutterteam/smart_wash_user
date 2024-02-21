@@ -59,6 +59,8 @@ class PrivacyPolicyNotifier
   PrivacyPolicyNotifier(this.repo) : super(const ApiState.initial()) {
     getPrivacyPolicy();
   }
+  
+  
 
   final ISettingsRepo repo;
 

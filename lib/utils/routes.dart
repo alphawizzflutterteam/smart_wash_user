@@ -21,6 +21,7 @@ import 'package:dry_cleaners/screens/order/order_details_page.dart';
 import 'package:dry_cleaners/screens/order/schedule_picker.dart';
 import 'package:dry_cleaners/screens/other/about_us.dart';
 import 'package:dry_cleaners/screens/other/contact_us.dart';
+import 'package:dry_cleaners/screens/other/faq.dart';
 import 'package:dry_cleaners/screens/other/privacy_policy.dart';
 import 'package:dry_cleaners/screens/other/terms_of_service.dart';
 import 'package:dry_cleaners/screens/payment/add_card_screen.dart';
@@ -29,6 +30,7 @@ import 'package:dry_cleaners/screens/payment/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dry_cleaners/screens/map_tracking.dart';
+
 class Routes {
   /*We are mapping all th eroutes here
   so that we can call any named route
@@ -51,7 +53,6 @@ class Routes {
   static const checkOutScreen = '/checkOutScreen';
   static const orderSuccessScreen = '/orderSuccessScreen';
 
-
   static const chooseItemScreen = '/chooseItemScreen';
   //Functionality
   static const manageAddressScreen = '/manageAddressScreen';
@@ -60,6 +61,7 @@ class Routes {
   static const privacyPolicyScreen = '/privacyPolicyScreen';
   static const termsOfServiceScreen = '/termsOfServiceScreen';
   static const aboutUsScreen = '/aboutUsScreen';
+  static const FaqScreen = '/FaqScreen';
   static const contactUsScreen = '/contactUsScreen';
   static const schedulePickerScreen = '/schedulePickerScreen';
   static const deilverySchedulePickerScreen = '/deilverySchedulePickerScreen';
@@ -132,13 +134,10 @@ Route generatedRoutes(RouteSettings settings) {
     //Functionality
     case Routes.chooseItemScreen:
       child = ChooseItems(
-
-
         // service: settings.arguments! as Service,
-         service: settings.arguments as Service,
+        service: settings.arguments as Service,
         // frenchId: settings.arguments.toString(),
         // VenderId: settings.arguments.toString(),
-
       );
       break;
     //Functionality
@@ -159,6 +158,9 @@ Route generatedRoutes(RouteSettings settings) {
       break;
     case Routes.aboutUsScreen:
       child = const AboutUs();
+      break;
+    case Routes.FaqScreen:
+      child = FaqScreen();
       break;
     case Routes.contactUsScreen:
       child = const ContactUs();

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:dry_cleaners/constants/app_colors.dart';
 import 'package:dry_cleaners/constants/app_text_decor.dart';
 import 'package:dry_cleaners/constants/config.dart';
@@ -30,7 +32,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -46,7 +50,7 @@ class HomeTab extends ConsumerStatefulWidget {
 }
 
 class _HomeTabState extends ConsumerState<HomeTab> {
-   late VideoPlayerController _controller;
+  late VideoPlayerController _controller;
 
   List postCodelist = [];
 
@@ -57,6 +61,7 @@ class _HomeTabState extends ConsumerState<HomeTab> {
   }
 
   var videeeo;
+  late Future my;
   @override
   void initState() {
     super.initState();
@@ -95,35 +100,19 @@ class _HomeTabState extends ConsumerState<HomeTab> {
       print(result);
       var finalresult = jsonDecode(result);
 
-      setState(() {
-        videeeo = finalresult['data']['descritption'].toString();
+      videeeo = finalresult['data']['descritption'].toString();
 
+      print("===my technic==api video=====${videeeo}===============");
 
-        print("===my technic==api video=====${videeeo}===============");
-      });
+      print("===my technic======video if======${videeeo}======");
 
-      if (videeeo == null || videeeo == "null") {
-        print("===my technic======video if======${videeeo}======");
-
-
-        _controller = VideoPlayerController.networkUrl(Uri.parse(
-            "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"))
-          ..initialize().then((_) {
-            setState(() {});
-          });
-      } else {
-        print("===my technic======video else============${videeeo}==");
-        setState(()  {
-          _controller =
-            VideoPlayerController.networkUrl(Uri.parse("${videeeo}"))
+      _controller =
+          await VideoPlayerController.networkUrl(Uri.parse(videeeo.toString()))
             ..initialize().then((_) {
-              setState(() {});
+              setState(() {
+                print("Initialized");
+              });
             });
-
-
-
-          });
-      }
     } else {
       print(response.reasonPhrase);
     }
@@ -168,6 +157,33 @@ class _HomeTabState extends ConsumerState<HomeTab> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       ref.refresh(allOrdersProvider);
     });
+  }
+
+  Directory? dir;
+  downloadBanner({required String url, required String descritption}) async {
+    Dio dio = Dio();
+    try {
+      var status = await Permission.storage.request();
+      if (status.isGranted) {
+        String fileName = url.toString().split('/').last;
+        print("FileName: $fileName");
+        dir = Directory('/storage/emulated/0/Download/'); // for android
+        if (!await dir!.exists()) dir = await getExternalStorageDirectory();
+        String path = "${dir?.path}$fileName";
+        await dio.download(
+          url.toString(),
+          path,
+          onReceiveProgress: (recivedBytes, totalBytes) {
+            print(recivedBytes);
+          },
+          deleteOnError: true,
+        ).then((value) async =>
+            await Share.shareXFiles([XFile(path)], text: descritption));
+      }
+    } catch (e, stackTrace) {
+      print(stackTrace);
+      throw Exception(e);
+    }
   }
 
   @override
@@ -310,21 +326,29 @@ class _HomeTabState extends ConsumerState<HomeTab> {
                                       ),
                                       items: _.data.data!.promotions!
                                           .map(
-                                            (e) => Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 9.w,
-                                              ),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  10.w,
+                                            (e) => GestureDetector(
+                                              onTap: () {
+                                                downloadBanner(
+                                                    url: e.imagePath.toString(),
+                                                    descritption: e.description
+                                                        .toString());
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 9.w,
                                                 ),
-                                                child: Container(
-                                                  color: AppColors.white,
-                                                  width: 355.w,
-                                                  child: Image.network(
-                                                    e.imagePath!,
-                                                    fit: BoxFit.fill,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    10.w,
+                                                  ),
+                                                  child: Container(
+                                                    color: AppColors.white,
+                                                    width: 355.w,
+                                                    child: Image.network(
+                                                      e.imagePath!,
+                                                      fit: BoxFit.fill,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -361,7 +385,7 @@ class _HomeTabState extends ConsumerState<HomeTab> {
                                       border: Border.all(),
                                       borderRadius: BorderRadius.circular(15),
                                       color: AppColors.gold),
-                                  child: Center(
+                                  child: const Center(
                                       child: Text(
                                     'Order Now',
                                     style: TextStyle(
@@ -705,52 +729,57 @@ class _HomeTabState extends ConsumerState<HomeTab> {
                                   : InkWell(
                                       onTap: () {
                                         setState(() {
-
                                           _controller.value.isPlaying
                                               ? _controller.pause()
                                               : _controller.play();
                                         });
                                       },
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 180,
-                                        color: Colors.white70,
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 180,
-                                              color: Colors.white70,
-                                              child: Center(
-                                                child: _controller
-                                                        .value.isInitialized
-                                                    ? AspectRatio(
-                                                        aspectRatio: _controller
-                                                            .value.aspectRatio,
-                                                        child: VideoPlayer(
-                                                            _controller),
-                                                      )
-                                                    : Container(),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 5,
-                                              left: 20,
-                                              child: Icon(
-                                                _controller.value.isPlaying
-                                                    ? Icons.pause
-                                                    : Icons.play_arrow,
-                                                size: 35,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 180,
+                                          color: Colors.white70,
+                                          child: _controller.value.isInitialized
+                                              ? Stack(
+                                                  children: [
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      height: 180,
+                                                      color: Colors.white70,
+                                                      child: Center(
+                                                        child: _controller.value
+                                                                .isInitialized
+                                                            ? AspectRatio(
+                                                                aspectRatio:
+                                                                    _controller
+                                                                        .value
+                                                                        .aspectRatio,
+                                                                child: VideoPlayer(
+                                                                    _controller),
+                                                              )
+                                                            : Container(),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      top: 5,
+                                                      left: 20,
+                                                      child: Icon(
+                                                        _controller
+                                                                .value.isPlaying
+                                                            ? Icons.pause
+                                                            : Icons.play_arrow,
+                                                        size: 35,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Center(
+                                                  child:
+                                                      CircularProgressIndicator())),
                                     ),
-
                               // ref.watch(allServicesProvider).map(
                               //       initial: (_) => const SizedBox(),
                               //       loading: (_) => const LoadingWidget(

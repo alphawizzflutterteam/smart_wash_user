@@ -40,7 +40,7 @@ dependencies:
   expandable: ^5.0.1
   flutter_stripe: ^7.0.0
   flutter_rating_bar: ^4.0.1
-  permission_handler: ^10.3.0
+  permission_handler: ^11.0.1
   collection: ^1.16.0
   geocoding: ^2.1.0
   geolocator:
@@ -49,7 +49,7 @@ dependencies:
   flutter_html: ^3.0.0-alpha.5
   table_calendar: ^3.0.6
   url_launcher: ^6.1.5
-  video_player: any
+  video_player: ^2.7.2
   upgrader: ^4.6.1
   flutter_launch: ^0.3.0
   cached_network_image: ^3.2.3
@@ -62,6 +62,10 @@ dependencies:
   google_maps_place_picker_mb: ^2.0.0-mb.18
   cloud_firestore: ^4.8.5
   shared_preferences: ^2.0.17
+  share_plus: ^6.3.4
+  path_provider: ^2.1.1
+  fluttertoast: ^8.2.4
+ 
 
 
 dev_dependencies:

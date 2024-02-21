@@ -349,7 +349,6 @@ class S {
     );
   }
 
-
   String get getnoOutLet {
     return Intl.message(
       'No OutLet Found In Your Location',
@@ -568,9 +567,8 @@ class S {
     );
   }
 
-
   /// `Sub total`
-  String get delivertpe  {
+  String get delivertpe {
     return Intl.message(
       'Delivery Type',
       name: 'delivertpe',
@@ -1092,7 +1090,7 @@ class S {
   /// `You Are About to Logout`
   String get urabttolgot {
     return Intl.message(
-      'You Are About to Logout',
+      'Are You Sure You Want To Log Out?',
       name: 'urabttolgot',
       desc: '',
       args: [],
@@ -1229,7 +1227,6 @@ class S {
     );
   }
 
-
   String get selfpic {
     return Intl.message(
       'Self Pickup',
@@ -1247,6 +1244,7 @@ class S {
       args: [],
     );
   }
+
   /// `Pick Up`
   String get pckup {
     return Intl.message(
@@ -1646,7 +1644,6 @@ class S {
       args: [],
     );
   }
-
 
   String get ucnupldpgorpng {
     return Intl.message(
