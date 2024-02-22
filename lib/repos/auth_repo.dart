@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -52,8 +53,8 @@ class AuthRepo extends IAuthRepo {
   Future<LoginModel> login({
     required String contact,
     required String password,
-      required String device_key,
-    }) async {
+    required String device_key,
+  }) async {
     final token = await FirebaseMessaging.instance.getToken();
     String deviceType = 'android';
     if (Platform.isIOS) {
@@ -70,23 +71,22 @@ class AuthRepo extends IAuthRepo {
         },
       ),
     );
+    log(response.data.toString() + "login response");
     return LoginModel.fromMap(response.data as Map<String, dynamic>);
   }
 
   @override
   Future<void> forgotPassword({required String contact}) async {
     final Map<String, dynamic> data = {};
-    data["contact"]= contact;
-  final response =  await _dio.post(
+    data["contact"] = contact;
+    final response = await _dio.post(
       '/forgot-password',
       data: FormData.fromMap(data),
     );
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('otp',"${response.data['data']['otp']}");
-
-
+    await prefs.setString('otp', "${response.data['data']['otp']}");
   }
 
   @override

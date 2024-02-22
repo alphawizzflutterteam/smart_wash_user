@@ -47,81 +47,87 @@ class MyNotificationsTab extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: Hive.box(AppHSC.authBox).listenable(),
-              builder: (BuildContext context, Box authbox, Widget? child) {
-                return (authbox.get('token') != null &&
-                        authbox.get('token') != '' &&
-                        notifications.isNotEmpty)
-                    ? ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: notifications.length,
-                        itemBuilder: (context, index) {
-                          final notfication = notifications[index];
-                          return Dismissible(
-                            onDismissed: (direction) {
-                              if (direction == DismissDirection.endToStart) {
-                                NotificationFunctions.deleteNotification(
-                                  notificationID: notfication.id.toString(),
-                                ).then((value) {
-                                  ref.refresh(notificationListProvider);
-                                });
-                              } else if (direction ==
-                                  DismissDirection.startToEnd) {
-                                NotificationFunctions.readNotification(
-                                  notificationID: notfication.id.toString(),
-                                ).then((value) {
-                                  ref.refresh(notificationListProvider);
-                                });
-                              }
-                            },
-                            key: UniqueKey(),
-                            child: Container(
-                              padding: EdgeInsets.all(16.h),
-                              margin: EdgeInsets.all(10.h),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r),
-                                color: AppColors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF000000)
-                                        .withOpacity(0.2),
-                                    offset: const Offset(0, 2),
-                                    blurRadius: 10,
-                                  )
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    notfication.title ?? '',
-                                    style: notfication.isRead == 1
-                                        ? AppTextDecor.osRegular12navy
-                                        : AppTextDecor.osSemiBold14black,
-                                  ),
-                                  Text(
-                                    notfication.message ?? '',
-                                    style: notfication.isRead == 1
-                                        ? AppTextDecor.osRegular12navy
-                                        : AppTextDecor.osSemiBold14black,
-                                  ),
-                                  // Text(
-                                  //   DateFormat.jm('en_US')
-                                  //       .format(notfication.createdAt!),
-                                  //   style: notfication.isRead == 1
-                                  //       ? AppTextDecor.osRegular12navy
-                                  //       : AppTextDecor.osSemiBold14black,
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const NoNotificationWidget();
+            child: RefreshIndicator(
+              onRefresh: () async {
+                Future.delayed(Duration(seconds: 1));
+                ref.refresh(notificationListProvider);
               },
+              child: ValueListenableBuilder(
+                valueListenable: Hive.box(AppHSC.authBox).listenable(),
+                builder: (BuildContext context, Box authbox, Widget? child) {
+                  return (authbox.get('token') != null &&
+                          authbox.get('token') != '' &&
+                          notifications.isNotEmpty)
+                      ? ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: notifications.length,
+                          itemBuilder: (context, index) {
+                            final notfication = notifications[index];
+                            return Dismissible(
+                              onDismissed: (direction) {
+                                if (direction == DismissDirection.endToStart) {
+                                  NotificationFunctions.deleteNotification(
+                                    notificationID: notfication.id.toString(),
+                                  ).then((value) {
+                                    ref.refresh(notificationListProvider);
+                                  });
+                                } else if (direction ==
+                                    DismissDirection.startToEnd) {
+                                  NotificationFunctions.readNotification(
+                                    notificationID: notfication.id.toString(),
+                                  ).then((value) {
+                                    ref.refresh(notificationListProvider);
+                                  });
+                                }
+                              },
+                              key: UniqueKey(),
+                              child: Container(
+                                padding: EdgeInsets.all(16.h),
+                                margin: EdgeInsets.all(10.h),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF000000)
+                                          .withOpacity(0.2),
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 10,
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      notfication.title ?? '',
+                                      style: notfication.isRead == 1
+                                          ? AppTextDecor.osRegular12navy
+                                          : AppTextDecor.osSemiBold14black,
+                                    ),
+                                    Text(
+                                      notfication.message ?? '',
+                                      style: notfication.isRead == 1
+                                          ? AppTextDecor.osRegular12navy
+                                          : AppTextDecor.osSemiBold14black,
+                                    ),
+                                    // Text(
+                                    //   DateFormat.jm('en_US')
+                                    //       .format(notfication.createdAt!),
+                                    //   style: notfication.isRead == 1
+                                    //       ? AppTextDecor.osRegular12navy
+                                    //       : AppTextDecor.osSemiBold14black,
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const NoNotificationWidget();
+                },
+              ),
             ),
           ),
         ],

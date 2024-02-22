@@ -820,7 +820,7 @@ class S {
   /// `Address Line`
   String get adrsline {
     return Intl.message(
-      'Address Line',
+      'Address Line 1',
       name: 'adrsline',
       desc: '',
       args: [],
@@ -1210,7 +1210,7 @@ class S {
   /// `Shipping Type`
   String get shptpe {
     return Intl.message(
-      'Chose Pickup Type',
+      'Choose Pickup Type',
       name: 'shptpe',
       desc: '',
       args: [],

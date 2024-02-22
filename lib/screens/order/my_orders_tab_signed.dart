@@ -37,22 +37,28 @@ class MyOrdersSignedIn extends ConsumerWidget {
                   msg: S.of(context).noordrfnd,
                 );
               } else {
-                return ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: _.data.data!.orders!.length +
-                      1, // Add 1 to account for the additional padding
-                  itemBuilder: (context, index) {
-                    if (index < _.data.data!.orders!.length) {
-                      final Order data = _.data.data!.orders![index];
-                      return OrderTile(data: data);
-                    } else {
-                      // Add the desired padding widget after the last index
-                      return const Padding(
-                        padding: EdgeInsets.only(bottom: 140.0),
-                        child: SizedBox(), // Placeholder widget
-                      );
-                    }
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    Future.delayed(Duration(seconds: 2));
+                    ref.refresh(allOrdersProvider);
                   },
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: _.data.data!.orders!.length +
+                        1, // Add 1 to account for the additional padding
+                    itemBuilder: (context, index) {
+                      if (index < _.data.data!.orders!.length) {
+                        final Order data = _.data.data!.orders![index];
+                        return OrderTile(data: data);
+                      } else {
+                        // Add the desired padding widget after the last index
+                        return const Padding(
+                          padding: EdgeInsets.only(bottom: 140.0),
+                          child: SizedBox(), // Placeholder widget
+                        );
+                      }
+                    },
+                  ),
                 );
               }
             },

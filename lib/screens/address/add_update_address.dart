@@ -30,11 +30,10 @@ class AddOrEditAddress extends ConsumerStatefulWidget {
 }
 
 class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
-
   var latee;
   var longaa;
   final GlobalKey<FormBuilderState> _formkey = GlobalKey<FormBuilderState>();
-  TextEditingController addresss=TextEditingController();
+  TextEditingController addresss = TextEditingController();
   @override
   Widget build(BuildContext context) {
     ref.watch(addAddresProvider);
@@ -78,7 +77,6 @@ class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
                       children: [
                         AppSpacerH(20.h),
 
-
                         FormBuilderTextField(
                           cursorColor: AppColors.goldenButton,
                           name: 'address_name',
@@ -93,14 +91,14 @@ class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
 
                         FormBuilderTextField(
                           readOnly: true,
-
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PlacePicker(
                                   // apiKey:"AIzaSyBl2FY2AnfX6NwR4LlOOlT9dDve0VwQLAA",
-                                  apiKey:"AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
+                                  apiKey:
+                                      "AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
 
                                   onPlacePicked: (result) {
                                     print(result.formattedAddress);
@@ -112,60 +110,54 @@ class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
                                     });
                                     Navigator.of(context).pop();
                                   },
-                                  initialPosition: LatLng(
-                                      22.719568,75.857727),
+                                  initialPosition: LatLng(22.719568, 75.857727),
                                   useCurrentLocation: true,
                                 ),
                               ),
                             );
-
                           },
                           validator: FormBuilderValidators.compose(
                             [FormBuilderValidators.required()],
                           ),
-
                           cursorColor: AppColors.goldenButton,
-                           controller: addresss,
-                           name: 'area',
+                          controller: addresss,
+                          name: 'area',
                           decoration:
                               AppInputDecor.loginPageInputDecor.copyWith(
-
-
                             hintText: S.of(context).areaex,
-
-
-                                suffixIcon: IconButton(onPressed: () {
-
+                            suffixIcon: IconButton(
+                                onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => PlacePicker(
                                         // apiKey:"AIzaSyBl2FY2AnfX6NwR4LlOOlT9dDve0VwQLAA",
-                                         apiKey:"AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
+                                        apiKey:
+                                            "AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
 
                                         onPlacePicked: (result) {
                                           print(result.formattedAddress);
                                           setState(() {
-                                            addresss.text =
-                                                result.formattedAddress.toString();
-                                            latee = result.geometry!.location.lat;
-                                            longaa = result.geometry!.location.lng;
+                                            addresss.text = result
+                                                .formattedAddress
+                                                .toString();
+                                            latee =
+                                                result.geometry!.location.lat;
+                                            longaa =
+                                                result.geometry!.location.lng;
                                           });
                                           Navigator.of(context).pop();
                                         },
-                                        initialPosition: LatLng(
-                                            22.719568,75.857727),
+                                        initialPosition:
+                                            LatLng(22.719568, 75.857727),
                                         useCurrentLocation: true,
                                       ),
                                     ),
                                   );
-
-                                }, icon:Icon(Icons.location_searching_rounded) ),
-
-
-                              ),
+                                },
+                                icon: Icon(Icons.location_searching_rounded)),
+                          ),
                         ),
-
 
                         AppSpacerH(20.h),
                         SizedBox(
@@ -223,15 +215,11 @@ class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
                         ),
                         AppSpacerH(20.h),
                         FormBuilderTextField(
-
-
                           cursorColor: AppColors.goldenButton,
-
                           name: S.of(context).adrsline_two,
-
                           decoration:
                               AppInputDecor.loginPageInputDecor.copyWith(
-                            hintText: S.of(context).adrsline,
+                            hintText: S.of(context).adrsline_two,
                           ),
                         ),
                         AppSpacerH(40.h),
@@ -242,33 +230,29 @@ class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
                                   initial: (_) => AppTextButton(
                                     title: S.of(context).adadres,
                                     onTap: () {
-
-
                                       if (_formkey.currentState!
                                           .saveAndValidate()) {
-
-
-                                        final Map<String, dynamic> existingData = _formkey.currentState!.value;// Assuming this contains the existing map
+                                        final Map<String, dynamic>
+                                            existingData = _formkey
+                                                .currentState!
+                                                .value; // Assuming this contains the existing map
 
                                         Map<String, dynamic> newData = {
                                           ...existingData, // Copy the existing data
-                                          'latitude': latee, // Add the new key-value pair
-                                          'longitude': longaa, // Add the new key-value pair
+                                          'latitude':
+                                              latee, // Add the new key-value pair
+                                          'longitude':
+                                              longaa, // Add the new key-value pair
                                         };
 
                                         ref
-                                               .watch(addAddresProvider.notifier)
-                                              .addAddress(
-                                                address:
-                                                newData,
-                                              );
+                                            .watch(addAddresProvider.notifier)
+                                            .addAddress(
+                                              address: newData,
+                                            );
 
                                         print('=================${newData}');
-
-
                                       }
-
-
 
                                       // if (_formkey.currentState!
                                       //     .saveAndValidate()) {
@@ -320,21 +304,24 @@ class _AddOrEditAddressState extends ConsumerState<AddOrEditAddress> {
                                     onTap: () {
                                       if (_formkey.currentState!
                                           .saveAndValidate()) {
-
-                                        final Map<String, dynamic> existingData = _formkey.currentState!.value;// Assuming this contains the existing map
+                                        final Map<String, dynamic>
+                                            existingData = _formkey
+                                                .currentState!
+                                                .value; // Assuming this contains the existing map
 
                                         Map<String, dynamic> newData = {
                                           ...existingData, // Copy the existing data
-                                          'latitude': latee, // Add the new key-value pair
-                                          'longitude': longaa, // Add the new key-value pair
+                                          'latitude':
+                                              latee, // Add the new key-value pair
+                                          'longitude':
+                                              longaa, // Add the new key-value pair
                                         };
                                         ref
                                             .watch(
                                               updateAddresProvider.notifier,
                                             )
                                             .updateAddress(
-                                              address:
-                                              newData,
+                                              address: newData,
                                               addressID: widget.address!.id!
                                                   .toString(),
                                             );

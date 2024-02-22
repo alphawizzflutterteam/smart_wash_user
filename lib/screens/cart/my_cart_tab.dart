@@ -2,7 +2,6 @@ import 'package:dry_cleaners/constants/app_box_decoration.dart';
 import 'package:dry_cleaners/constants/app_colors.dart';
 import 'package:dry_cleaners/constants/app_text_decor.dart';
 import 'package:dry_cleaners/constants/hive_contants.dart';
-import 'package:dry_cleaners/constants/input_field_decorations.dart';
 import 'package:dry_cleaners/generated/l10n.dart';
 import 'package:dry_cleaners/misc/global_functions.dart';
 import 'package:dry_cleaners/misc/misc_global_variables.dart';
@@ -31,8 +30,6 @@ class MyCartTab extends ConsumerWidget {
   final TextEditingController coupon = TextEditingController();
 
   @override
-
-
   Widget build(BuildContext context, WidgetRef ref) {
     final orderId = ref.watch(orderIdProvider);
     int? minimum;
@@ -175,8 +172,6 @@ class MyCartTab extends ConsumerWidget {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-
-
                                                   // Text(
                                                   //   S.of(context).couponCode,
                                                   //   style: AppTextDecor
@@ -223,7 +218,6 @@ class MyCartTab extends ConsumerWidget {
                                                   //   ),
                                                   // ),
                                                   //
-
                                                 ],
                                               ),
                                             ),
@@ -272,7 +266,6 @@ class MyCartTab extends ConsumerWidget {
                                             ),
                                             child: Column(
                                               children: [
-
                                                 Table(
                                                   children: [
                                                     AppGFunctions.tableTextRow(
@@ -281,7 +274,6 @@ class MyCartTab extends ConsumerWidget {
                                                       data:
                                                           '${appSettingsBox.get('currency') ?? '\$'}${calculateTotal(cartItems).toStringAsFixed(2)}',
                                                     ),
-
 
                                                     // if (AppGFunctions
                                                     //         .calculateTotal(
@@ -319,7 +311,6 @@ class MyCartTab extends ConsumerWidget {
 // SizedBox(height: 100,),
                                                 AppSpacerH(8.5.h),
 
-
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -349,13 +340,15 @@ class MyCartTab extends ConsumerWidget {
                                                     ]
                                                   ],
                                                 ),
-
-
                                               ],
                                             ),
                                           ),
                                           AppSpacerH(50.h),
-                                          SizedBox(height: MediaQuery.of(context).size.height/8),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  8),
                                           Container(
                                             height: 104.h,
                                             width: 375.w,
@@ -450,7 +443,6 @@ class MyCartTab extends ConsumerWidget {
                                                                   height: 45.h,
                                                                   width: 164.w,
                                                                   onTap: () {
-
                                                                     final Box
                                                                         authBox =
                                                                         Hive.box(

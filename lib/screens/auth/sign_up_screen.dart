@@ -56,10 +56,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return LoginScreenWrapper(
       child: FormBuilder(
         key: _formkey,
-        child: SizedBox(
-          height: 812.h,
-          width: 375.w,
-          child: Stack(
+        child: SingleChildScrollView(
+          child: Column(
             children: [
               SizedBox(
                 height: 230.h,
@@ -75,163 +73,161 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              Positioned(
-                top: 170,
-                child: Container(
-                  height: 642.h,
-                  width: 375.w,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: ListView(
-                    children: [
-                      AppSpacerH(33.h),
-                      FormBuilderTextField(
-                        focusNode: fNodes[0],
-                        name: 'first_name',
-                        decoration: AppInputDecor.loginPageInputDecor.copyWith(
-                          hintText: S.of(context).fullName,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()],
-                        ),
+              Container(
+                // height: 642.h,
+                // width: 375.w,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  children: [
+                    AppSpacerH(33.h),
+                    FormBuilderTextField(
+                      focusNode: fNodes[0],
+                      name: 'first_name',
+                      decoration: AppInputDecor.loginPageInputDecor.copyWith(
+                        hintText: S.of(context).fullName,
                       ),
-                      AppSpacerH(20.h),
-                      FormBuilderTextField(
-                        focusNode: fNodes[2],
-                        name: 'email',
-                        decoration: AppInputDecor.loginPageInputDecor.copyWith(
-                          hintText: S.of(context).email,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required(),FormBuilderValidators.email()],
-                        ),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      validator: FormBuilderValidators.compose(
+                        [FormBuilderValidators.required()],
                       ),
-                      AppSpacerH(20.h),
-                      FormBuilderTextField(
-                        maxLength: 10,
-                        focusNode: fNodes[3],
+                    ),
+                    AppSpacerH(20.h),
+                    FormBuilderTextField(
+                      focusNode: fNodes[2],
+                      name: 'email',
+                      decoration: AppInputDecor.loginPageInputDecor.copyWith(
+                        hintText: S.of(context).email,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      validator: FormBuilderValidators.compose(
+                        [
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.email()
+                        ],
+                      ),
+                    ),
+                    AppSpacerH(20.h),
+                    FormBuilderTextField(
+                      maxLength: 10,
+                      focusNode: fNodes[3],
 
-                        name: 'mobile',
-                        decoration: AppInputDecor.loginPageInputDecor.copyWith(
-                          counterText: '',
-                          hintText: S.of(context).phoneNumber,
-                        ),
-                        keyboardType: TextInputType.phone,
-                        textInputAction: TextInputAction.next,
-                        validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required(),FormBuilderValidators.minLength(10)],
-                        ),
-                        // validator: (value) {
-                        //   if (value != null) {
-                        //     FormBuilderValidators.compose(
-                        //       [
-                        //         FormBuilderValidators.required(),
-                        //         // FormBuilderValidators.maxLength(10),
-                        //         // FormBuilderValidators.minLength(10)
-                        //       ],
-                        //     );
-                        //   }
-                        //   return null;
-                        // },
+                      name: 'mobile',
+                      decoration: AppInputDecor.loginPageInputDecor.copyWith(
+                        counterText: '',
+                        hintText: S.of(context).phoneNumber,
                       ),
-                      AppSpacerH(20.h),
-                      FormBuilderTextField(
-                        focusNode: fNodes[4],
-                        name: 'password',
-                        obscureText: obsecureText,
-                        decoration: AppInputDecor.loginPageInputDecor.copyWith(
-                          hintText: S.of(context).createPassword,
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                obsecureText = !obsecureText;
-                              });
-                            },
-                            child: Icon(
-                              obsecureText
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility,
-                              color: AppColors.black,
-                            ),
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      validator: FormBuilderValidators.compose(
+                        [
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.minLength(10)
+                        ],
+                      ),
+                      // validator: (value) {
+                      //   if (value != null) {
+                      //     FormBuilderValidators.compose(
+                      //       [
+                      //         FormBuilderValidators.required(),
+                      //         // FormBuilderValidators.maxLength(10),
+                      //         // FormBuilderValidators.minLength(10)
+                      //       ],
+                      //     );
+                      //   }
+                      //   return null;
+                      // },
+                    ),
+                    AppSpacerH(20.h),
+                    FormBuilderTextField(
+                      focusNode: fNodes[4],
+                      name: 'password',
+                      obscureText: obsecureText,
+                      decoration: AppInputDecor.loginPageInputDecor.copyWith(
+                        hintText: S.of(context).createPassword,
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              obsecureText = !obsecureText;
+                            });
+                          },
+                          child: Icon(
+                            obsecureText
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility,
+                            color: AppColors.black,
                           ),
                         ),
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.done,
-                        validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()],
-                        ),
                       ),
-                      AppSpacerH(20.h),
-
-
-                      FormBuilderTextField(
-                        focusNode: fNodes[5],
-                        name: 'password_confirmation',
-                        obscureText: obsecureTextTwo,
-                        decoration: AppInputDecor.loginPageInputDecor.copyWith(
-                          hintText: S.of(context).confirmPassword,
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                obsecureTextTwo = !obsecureTextTwo;
-                              });
-                            },
-                            child: Icon(
-                              obsecureTextTwo
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility,
-                              color: AppColors.black,
-                            ),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      validator: FormBuilderValidators.compose(
+                        [FormBuilderValidators.required()],
+                      ),
+                    ),
+                    AppSpacerH(20.h),
+                    FormBuilderTextField(
+                      focusNode: fNodes[5],
+                      name: 'password_confirmation',
+                      obscureText: obsecureTextTwo,
+                      decoration: AppInputDecor.loginPageInputDecor.copyWith(
+                        hintText: S.of(context).confirmPassword,
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              obsecureTextTwo = !obsecureTextTwo;
+                            });
+                          },
+                          child: Icon(
+                            obsecureTextTwo
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility,
+                            color: AppColors.black,
                           ),
                         ),
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.done,
-                        validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()],
-                        ),
                       ),
-
-
-                      AppSpacerH(20.h),
-                      SizedBox(
-                        width: 335.w,
-                        child: Wrap(
-                          runSpacing: 10.h,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  shouldRemember = !shouldRemember;
-                                });
-                              },
-                              child: SvgPicture.asset(
-                                shouldRemember
-                                    ? 'assets/svgs/icon_selection_ticked.svg'
-                                    : 'assets/svgs/icon_selection_unticked.svg',
-                                semanticsLabel: 'Top Logo',
-                                height: 17.h,
-                                width: 17.w,
-                              ),
-                            ),
-                            AppSpacerW(6.w),
-                            Text(
-                              '${S.of(context).iAcceptAndAgreeToThe} ',
-                              style: AppTextDecor.osRegular12black,
-                            ),
-
-
-                          ],
-                        ),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      validator: FormBuilderValidators.compose(
+                        [FormBuilderValidators.required()],
                       ),
-SizedBox(height: 10,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    ),
+                    AppSpacerH(20.h),
+                    SizedBox(
+                      width: 335.w,
+                      child: Wrap(
+                        runSpacing: 10.h,
                         children: [
-
-
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                shouldRemember = !shouldRemember;
+                              });
+                            },
+                            child: SvgPicture.asset(
+                              shouldRemember
+                                  ? 'assets/svgs/icon_selection_ticked.svg'
+                                  : 'assets/svgs/icon_selection_unticked.svg',
+                              semanticsLabel: 'Top Logo',
+                              height: 17.h,
+                              width: 17.w,
+                            ),
+                          ),
+                          AppSpacerW(6.w),
+                          Text(
+                            '${S.of(context).iAcceptAndAgreeToThe} ',
+                            style: AppTextDecor.osRegular12black,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         GestureDetector(
                           onTap: () {
                             showDialog(
@@ -246,66 +242,61 @@ SizedBox(height: 10,),
                                       return Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.white,
-                                          borderRadius:
-                                          BorderRadius.circular(
+                                          borderRadius: BorderRadius.circular(
                                             20.h,
                                           ),
                                         ),
                                         child: ref.watch(tosProvider).map(
-                                          initial: (_) =>
-                                          const SizedBox(),
-                                          loading: (_) =>
-                                          const LoadingWidget(),
-                                          loaded: (_) => Padding(
-                                            padding:
-                                            const EdgeInsets.all(
-                                              10.0,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  _.data.data!.setting!
-                                                      .title!,
-                                                  style: AppTextDecor
-                                                      .osBold24black,
+                                              initial: (_) => const SizedBox(),
+                                              loading: (_) =>
+                                                  const LoadingWidget(),
+                                              loaded: (_) => Padding(
+                                                padding: const EdgeInsets.all(
+                                                  10.0,
                                                 ),
-                                                const AppSpacerH(20),
-                                                Expanded(
-                                                  child:
-                                                  SingleChildScrollView(
-                                                    child: Html(
-                                                      style: {
-                                                        '*': Style(
-                                                          color: AppColors
-                                                              .navyText,
-                                                          fontSize:
-                                                          FontSize(
-                                                            14.sp,
-                                                          ),
-                                                          fontFamily:
-                                                          'Open Sans',
-                                                        )
-                                                      },
-                                                      data:
-                                                      '${_.data.data!.setting!.content!}<p></p><p></p><p></p><p></p><p></p>',
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      _.data.data!.setting!
+                                                          .title!,
+                                                      style: AppTextDecor
+                                                          .osBold24black,
                                                     ),
-                                                  ),
+                                                    const AppSpacerH(20),
+                                                    Expanded(
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        child: Html(
+                                                          style: {
+                                                            '*': Style(
+                                                              color: AppColors
+                                                                  .navyText,
+                                                              fontSize:
+                                                                  FontSize(
+                                                                14.sp,
+                                                              ),
+                                                              fontFamily:
+                                                                  'Open Sans',
+                                                            )
+                                                          },
+                                                          data:
+                                                              '${_.data.data!.setting!.content!}<p></p><p></p><p></p><p></p><p></p>',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    AppTextButton(
+                                                      title: S.of(context).okay,
+                                                      onTap: () {
+                                                        context.nav.pop();
+                                                      },
+                                                    )
+                                                  ],
                                                 ),
-                                                AppTextButton(
-                                                  title: S
-                                                      .of(context)
-                                                      .okay,
-                                                  onTap: () {
-                                                    context.nav.pop();
-                                                  },
-                                                )
-                                              ],
+                                              ),
+                                              error: (_) => ErrorTextWidget(
+                                                error: _.error,
+                                              ),
                                             ),
-                                          ),
-                                          error: (_) => ErrorTextWidget(
-                                            error: _.error,
-                                          ),
-                                        ),
                                       );
                                     },
                                   ),
@@ -336,68 +327,61 @@ SizedBox(height: 10,),
                                       return Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.white,
-                                          borderRadius:
-                                          BorderRadius.circular(
+                                          borderRadius: BorderRadius.circular(
                                             20.h,
                                           ),
                                         ),
-                                        child: ref
-                                            .watch(privacyProvider)
-                                            .map(
-                                          initial: (_) =>
-                                          const SizedBox(),
-                                          loading: (_) =>
-                                          const LoadingWidget(),
-                                          loaded: (_) => Padding(
-                                            padding:
-                                            const EdgeInsets.all(
-                                              10.0,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  _.data.data!.setting!
-                                                      .title!,
-                                                  style: AppTextDecor
-                                                      .osBold24black,
+                                        child: ref.watch(privacyProvider).map(
+                                              initial: (_) => const SizedBox(),
+                                              loading: (_) =>
+                                                  const LoadingWidget(),
+                                              loaded: (_) => Padding(
+                                                padding: const EdgeInsets.all(
+                                                  10.0,
                                                 ),
-                                                const AppSpacerH(20),
-                                                Expanded(
-                                                  child:
-                                                  SingleChildScrollView(
-                                                    child: Html(
-                                                      style: {
-                                                        '*': Style(
-                                                          color: AppColors
-                                                              .navyText,
-                                                          fontSize:
-                                                          FontSize(
-                                                            14.sp,
-                                                          ),
-                                                          fontFamily:
-                                                          'Open Sans',
-                                                        )
-                                                      },
-                                                      data:
-                                                      '${_.data.data!.setting!.content!}<p></p><p></p><p></p><p></p><p></p>',
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      _.data.data!.setting!
+                                                          .title!,
+                                                      style: AppTextDecor
+                                                          .osBold24black,
                                                     ),
-                                                  ),
+                                                    const AppSpacerH(20),
+                                                    Expanded(
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        child: Html(
+                                                          style: {
+                                                            '*': Style(
+                                                              color: AppColors
+                                                                  .navyText,
+                                                              fontSize:
+                                                                  FontSize(
+                                                                14.sp,
+                                                              ),
+                                                              fontFamily:
+                                                                  'Open Sans',
+                                                            )
+                                                          },
+                                                          data:
+                                                              '${_.data.data!.setting!.content!}<p></p><p></p><p></p><p></p><p></p>',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    AppTextButton(
+                                                      title: S.of(context).okay,
+                                                      onTap: () {
+                                                        context.nav.pop();
+                                                      },
+                                                    )
+                                                  ],
                                                 ),
-                                                AppTextButton(
-                                                  title: S
-                                                      .of(context)
-                                                      .okay,
-                                                  onTap: () {
-                                                    context.nav.pop();
-                                                  },
-                                                )
-                                              ],
+                                              ),
+                                              error: (_) => ErrorTextWidget(
+                                                error: _.error,
+                                              ),
                                             ),
-                                          ),
-                                          error: (_) => ErrorTextWidget(
-                                            error: _.error,
-                                          ),
-                                        ),
                                       );
                                     },
                                   ),
@@ -410,117 +394,112 @@ SizedBox(height: 10,),
                             style: AppTextDecor.osBold12gold,
                           ),
                         ),
-
-
-
-
-                      ],),
-                      AppSpacerH(30.h),
-                      SizedBox(
-                        height: 50.h,
-                        child: Consumer(
-                          builder: (context, ref, child) {
-                            return ref.watch(registrationProvider).map(
-                                  initial: (_) {
-                                    return AppTextButton(
-                                      buttonColor: AppColors.goldenButton,
-                                      title: S.of(context).signUp,
-                                      titleColor: AppColors.white,
-                                      onTap: () {
-                                        for (final element in fNodes) {
-                                          if (element.hasFocus) {
-                                            element.unfocus();
-                                          }
+                      ],
+                    ),
+                    AppSpacerH(30.h),
+                    SizedBox(
+                      height: 50.h,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          return ref.watch(registrationProvider).map(
+                                initial: (_) {
+                                  return AppTextButton(
+                                    buttonColor: AppColors.goldenButton,
+                                    title: S.of(context).signUp,
+                                    titleColor: AppColors.white,
+                                    onTap: () {
+                                      for (final element in fNodes) {
+                                        if (element.hasFocus) {
+                                          element.unfocus();
                                         }
-                                        if (_formkey.currentState != null &&
-                                            _formkey.currentState!
-                                                .saveAndValidate()) {
-                                          if (shouldRemember) {
-                                            ref
-                                                .watch(
-                                                  registrationProvider.notifier,
-                                                )
-                                                .register(
-                                                  _formkey.currentState!.value,
-                                                );
-                                          } else {
-                                            EasyLoading.showError(
-                                              S
-                                                  .of(context)
-                                                  .acceptTermsAndConditions,
-                                            );
-                                          }
+                                      }
+                                      if (_formkey.currentState != null &&
+                                          _formkey.currentState!
+                                              .saveAndValidate()) {
+                                        if (shouldRemember) {
+                                          ref
+                                              .watch(
+                                                registrationProvider.notifier,
+                                              )
+                                              .register(
+                                                _formkey.currentState!.value,
+                                              );
+                                        } else {
+                                          EasyLoading.showError(
+                                            S
+                                                .of(context)
+                                                .acceptTermsAndConditions,
+                                          );
                                         }
-                                      },
-                                    );
-                                  },
-                                  loading: (_) => const LoadingWidget(),
-                                  loaded: (_) {
-                                    final Box box = Hive.box(
-                                      AppHSC.authBox,
-                                    ); //Stores Auth Data
-                                    final Box userBox = Hive.box(
-                                      AppHSC.userBox,
-                                    ); //Stores User Data
-                                    box.putAll(_.data.data!.access!.toMap());
-                                    userBox.putAll(_.data.data!.user!.toMap());
-                                    Future.delayed(transissionDuration)
-                                        .then((value) {
-                                      ref.refresh(
-                                        registrationProvider,
-                                      ); //Refresh This so That App Doesn't Auto Login
+                                      }
+                                    },
+                                  );
+                                },
+                                loading: (_) => const LoadingWidget(),
+                                loaded: (_) {
+                                  final Box box = Hive.box(
+                                    AppHSC.authBox,
+                                  ); //Stores Auth Data
+                                  final Box userBox = Hive.box(
+                                    AppHSC.userBox,
+                                  ); //Stores User Data
+                                  box.putAll(_.data.data!.access!.toMap());
+                                  userBox.putAll(_.data.data!.user!.toMap());
+                                  Future.delayed(transissionDuration)
+                                      .then((value) {
+                                    ref.refresh(
+                                      registrationProvider,
+                                    ); //Refresh This so That App Doesn't Auto Login
 
-                                      Future.delayed(buildDuration)
-                                          .then((value) {
-                                        context.nav.pushNamed(
-                                          Routes.signUpImageUpload,
-                                        );
-                                      });
+                                    Future.delayed(buildDuration).then((value) {
+                                      context.nav.pushNamed(
+                                        Routes.signUpImageUpload,
+                                      );
                                     });
-                                    return MessageTextWidget(
-                                      msg: S.of(context).scs,
-                                    );
-                                  },
-                                  error: (_) {
-                                    Future.delayed(transissionDuration)
-                                        .then((value) {
-                                      ref.refresh(registrationProvider);
-                                    });
-                                    return ErrorTextWidget(error: _.error);
-                                  },
-                                );
-                          },
-                        ),
+                                  });
+                                  return MessageTextWidget(
+                                    msg: S.of(context).scs,
+                                  );
+                                },
+                                error: (_) {
+                                  Future.delayed(transissionDuration)
+                                      .then((value) {
+                                    ref.refresh(registrationProvider);
+                                  });
+                                  return ErrorTextWidget(error: _.error);
+                                },
+                              );
+                        },
                       ),
-                      AppSpacerH(30.h),
-                      SizedBox(
-                        // height: 18.h,
-                        width: 335.w,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${S.of(context).alreadyHaveAnAccount} ",
-                              style: AppTextDecor.osRegular12black,
+                    ),
+                    AppSpacerH(30.h),
+                    SizedBox(
+                      // height: 18.h,
+                      width: 335.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${S.of(context).alreadyHaveAnAccount} ",
+                            style: AppTextDecor.osRegular12black,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              context.nav.pushNamed(Routes.loginScreen);
+                            },
+                            child: Text(
+                              S.of(context).login,
+                              style: AppTextDecor.osBold12gold,
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                context.nav.pushNamed(Routes.loginScreen);
-                              },
-                              child: Text(
-                                S.of(context).login,
-                                style: AppTextDecor.osBold12gold,
-                              ),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
-                      AppSpacerH(44.h),
-
-
-                      SizedBox(height: 200,),
-                    ],
-                  ),
+                    ),
+                    AppSpacerH(44.h),
+                    SizedBox(
+                      height: 200,
+                    ),
+                  ],
                 ),
               ),
             ],

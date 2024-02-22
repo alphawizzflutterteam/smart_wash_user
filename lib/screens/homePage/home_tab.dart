@@ -17,6 +17,7 @@ import 'package:dry_cleaners/providers/misc_providers.dart';
 import 'package:dry_cleaners/providers/order_providers.dart';
 import 'package:dry_cleaners/providers/profile_update_provider.dart';
 import 'package:dry_cleaners/providers/settings_provider.dart';
+import 'package:dry_cleaners/screens/homePage/tab_profile_unsigned.dart';
 import 'package:dry_cleaners/screens/order/my_order_home_tile.dart';
 import 'package:dry_cleaners/utils/context_less_nav.dart';
 import 'package:dry_cleaners/utils/routes.dart';
@@ -282,16 +283,28 @@ class _HomeTabState extends ConsumerState<HomeTab> {
                                         borderRadius:
                                             BorderRadius.circular(19.r),
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(18.r),
-                                        child: CachedNetworkImage(
-                                          imageUrl: box
-                                              .get('profile_photo_path')
-                                              .toString(),
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          print("object");
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UsignedUserTab(),
+                                              ));
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(18.r),
+                                          child: CachedNetworkImage(
+                                            imageUrl: box
+                                                .get('profile_photo_path')
+                                                .toString(),
+                                            fit: BoxFit.cover,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ),
                                         ),
                                       ),
                                     )

@@ -28,21 +28,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class ChooseItems extends ConsumerWidget {
-
-
-   ChooseItems({
+  ChooseItems({
     super.key,
     required this.service,
-     // this.frenchId,
-     // this.VenderId,
+    // this.frenchId,
+    // this.VenderId,
   });
   final Service service;
   // String ?frenchId;
   // String ?VenderId;
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -117,8 +115,6 @@ class ChooseItems extends ConsumerWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Column(
                       children: [
-
-
                         AppSpacerH(44.h),
                         AppNavbar(
                           title:
@@ -139,17 +135,13 @@ class ChooseItems extends ConsumerWidget {
                             context.nav.pop();
                           },
                         ),
-
                       ],
                     ),
                   ),
-
-
                   SizedBox(
                     width: 375.w,
                     height: 45.h,
-                    child:
-                    Consumer(
+                    child: Consumer(
                       builder: (context, refA, child) {
                         return refA
                             .watch(
@@ -160,8 +152,6 @@ class ChooseItems extends ConsumerWidget {
                               loading: (_) => const LoadingWidget(),
                               loaded: (_) {
                                 final List<Variant> variations =
-
-
                                     _.data.data!.variants!;
                                 variations.sort(
                                   (a, b) => a.id!.compareTo(b.id!),
@@ -185,11 +175,10 @@ class ChooseItems extends ConsumerWidget {
                                     final Variant vdata = variations[index];
                                     return GestureDetector(
                                       onTap: () {
-
-
                                         // print("=====================${VenderId.toString()}");
                                         // print("=====================${frenchId.toString()}");
-                                        print("=====================${vdata.id!.toString()}");
+                                        print(
+                                            "=====================${vdata.id!.toString()}");
                                         ref
                                             .watch(
                                           productsFilterProvider.notifier,
@@ -210,8 +199,6 @@ class ChooseItems extends ConsumerWidget {
                                             )
                                             .state = index;
                                       },
-
-
                                       child: Container(
                                         height: 45.h,
                                         color: finalIndex == index
@@ -255,32 +242,25 @@ class ChooseItems extends ConsumerWidget {
                       },
                     ),
                   ),
-
-
                   Container(
                     height: 563.h,
                     width: 375.w,
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Consumer(
                       builder: (context, ref, child) {
-                        return
-
-                          ref
+                        return ref
                             .watch(
                               productsProvider,
                             )
                             .map(
-
                               initial: (_) => const SizedBox(),
                               loading: (_) => const LoadingWidget(),
                               loaded: (_) => ListView.builder(
-
                                 padding: EdgeInsets.zero,
                                 itemCount: _.data.data!.products!.length + 1,
                                 itemBuilder: (context, index) {
-
-
-                                  print("length===============================${_.data.data!.products!.length}");
+                                  print(
+                                      "length===============================${_.data.data!.products!.length}");
                                   if (index == _.data.data!.products!.length) {
                                     return AppSpacerH(10.h);
                                   } else {
@@ -433,14 +413,11 @@ class ChooseItems extends ConsumerWidget {
                           ],
                         ),
                       );
-
-
-                      },
+                    },
                   );
                 },
               ),
             )
-
           ],
         ),
       ),
@@ -482,8 +459,6 @@ class _ChooseItemCardState extends State<ChooseItemCard> {
   @override
   void initState() {
     super.initState();
-
-
   }
 
   @override

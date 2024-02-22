@@ -22,7 +22,7 @@ class RecoverPasswordStageOne extends StatelessWidget {
   final FocusNode fNode = FocusNode();
   final GlobalKey<FormBuilderState> _formkey = GlobalKey<FormBuilderState>();
   String email = '';
-  String otp='';
+  String otp = '';
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,7 @@ class RecoverPasswordStageOne extends StatelessWidget {
                     context.nav.pop();
                   },
                 ),
+                AppSpacerH(10.h),
                 Text(
                   S.of(context).rcvrpswrd,
                   style: AppTextDecor.osBold30black,
@@ -67,7 +68,7 @@ class RecoverPasswordStageOne extends StatelessWidget {
                           [FormBuilderValidators.required()],
                         ),
                       ),
-                      AppSpacerH(150.h),
+                      AppSpacerH(50.h),
                       SizedBox(
                         height: 50.h,
                         child: Consumer(
@@ -90,14 +91,11 @@ class RecoverPasswordStageOne extends StatelessWidget {
                                         email =
                                             formData['email']!.value as String;
 
-                                       ref
+                                        ref
                                             .watch(forgotPassProvider.notifier)
                                             .forgotPassword(
                                               email,
                                             );
-
-
-
                                       }
                                     },
                                   ),
@@ -109,11 +107,8 @@ class RecoverPasswordStageOne extends StatelessWidget {
                                     return ErrorTextWidget(error: _.error);
                                   },
                                   loaded: (_) {
-
                                     Future.delayed(transissionDuration)
                                         .then((value) async {
-
-
                                       ref.refresh(
                                         forgotPassProvider,
                                       ); //Refresh This so That App Doesn't Auto Login
@@ -122,14 +117,18 @@ class RecoverPasswordStageOne extends StatelessWidget {
                                             forgotPassTimerProvider.notifier,
                                           )
                                           .startTimer();
-                                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                     otp= await prefs.getString('otp').toString();
-print("===my technic====otp===${otp}===============");
+                                      final SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      otp = await prefs
+                                          .getString('otp')
+                                          .toString();
+                                      print(
+                                          "===my technic====otp===${otp}===============");
                                       Future.delayed(buildDuration)
                                           .then((value) {
                                         context.nav.pushNamed(
                                           Routes.recoverPassWordStageTwo,
-                                          arguments: [email,otp],
+                                          arguments: [email, otp],
                                         );
                                       });
                                     });

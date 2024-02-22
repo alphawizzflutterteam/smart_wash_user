@@ -71,7 +71,7 @@ class PaymentSection extends ConsumerWidget {
           unprocessedData.forEach((key, value) {
             processedData[key.toString()] = value;
           });
- 
+
           cartItems.add(
             CarItemHiveModel.fromMap(
               processedData,
@@ -120,11 +120,12 @@ class PaymentSection extends ConsumerWidget {
                               // ),
                             ],
                           ),
+                          AppSpacerH(10.h),
                           AppTextButton(
                             title: S.of(context).pynw,
                             onTap: () async {
-
-print("${selectedValue.runtimeType}================${selectedValue}");
+                              print(
+                                  "${selectedValue.runtimeType}================${selectedValue}");
 
                               /*
                                       Order Placement Data Validation and Logic Processed Here
@@ -152,16 +153,14 @@ print("${selectedValue.runtimeType}================${selectedValue}");
                                 );
 
                                 //Cheks All Reguired Data Is AvailAble
-                                if (
-
-                                 selectedValue !=''&& selectedValue!=null  && outletid!=null && outletid!= '' &&
-                                pickUp != null &&
+                                if (selectedValue != '' &&
+                                    selectedValue != null &&
+                                    outletid != null &&
+                                    outletid != '' &&
+                                    pickUp != null &&
                                     delivery != null &&
                                     address != '' &&
-                                    cartItems.isNotEmpty
-
-
-                                ) {
+                                    cartItems.isNotEmpty) {
                                   //Has All Data
 
                                   await ref
@@ -172,7 +171,8 @@ print("${selectedValue.runtimeType}================${selectedValue}");
                                         OrderPlaceModel(
                                           franchise_id: frenchId.toString(),
                                           vendor_id: outletid.toString(),
-                                           deliver_type:selectedValue.toString() ,
+                                          deliver_type:
+                                              selectedValue.toString(),
                                           address_id: address,
                                           pick_date:
                                               "${pickUp.dateTime.year}-${pickUp.dateTime.month}-${pickUp.dateTime.day}",

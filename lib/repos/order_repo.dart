@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dry_cleaners/misc/misc_global_variables.dart';
 import 'package:dry_cleaners/models/add_order_model/add_order_model.dart';
@@ -37,7 +39,8 @@ class OrderRepo implements IOrderRepo {
     if (status != '') {
       qp = {'status': status};
     }
-    final Response response = await _dio.get('/get_orders', queryParameters: qp);
+    final Response response =
+        await _dio.get('/get_orders', queryParameters: qp);
     return AllOrdersModel.fromMap(response.data as Map<String, dynamic>);
   }
 
@@ -47,6 +50,7 @@ class OrderRepo implements IOrderRepo {
       '/orders',
       data: FormData.fromMap(orderPlaceModel.toMap()),
     );
+    log(orderPlaceModel.toMap().toString() + "Order Placed");
     print("order place =================${response}");
     return AddOrderModel.fromMap(response.data as Map<String, dynamic>);
   }
@@ -157,4 +161,3 @@ class OfflineOrderRepo implements IOrderRepo {
     return SchedulesModel.fromMap(OfflineOrderData.scheduleData);
   }
 }
-

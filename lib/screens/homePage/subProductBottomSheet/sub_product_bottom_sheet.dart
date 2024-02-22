@@ -13,6 +13,7 @@ import 'package:dry_cleaners/widgets/buttons/full_width_button.dart';
 import 'package:dry_cleaners/widgets/misc_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class SubPrductBottomSheet extends StatefulWidget {
@@ -91,16 +92,12 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                           index,
                         ) {
                           final length = widget.product.sbproducts!.length;
-                          return
-
-                            buildSubPoduct(
+                          return buildSubPoduct(
                             context,
                             length,
                             widget.product.sbproducts![index],
                             cartsBox,
                           );
-
-
                         },
                       ),
                     ),
@@ -210,7 +207,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                   style: AppTextDecor.osBold14black,
                 ),
                 Text(
-                 // "${settingsBox.get('currency')} ${subProduct.price}",
+                  // "${settingsBox.get('currency')} ${subProduct.price}",
                   "${settingsBox.get('currency')} ${subProduct.price}",
                   style: AppTextDecor.osSemiBold12black.copyWith(
                     color: AppColors.purple,
@@ -326,6 +323,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                             cartbox.add(
                               newcartItrm.toMap(),
                             );
+                            Fluttertoast.showToast(msg: 'Item added to cart');
                           }
                         },
                       ),
