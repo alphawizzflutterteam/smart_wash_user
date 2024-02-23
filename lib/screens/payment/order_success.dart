@@ -44,7 +44,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
             ),
             AppSpacerH(30.h),
             Text(
-              '${S.of(context).urordrhsbnplcd} ${(isCOD || isPaid) ? S.of(context).cnfrmd : S.of(context).plcdplsmkpymnttocnfrmit}',
+              '${S.of(context).urordrhsbnplcd} ${S.of(context).cnfrmd} ',
               style: AppTextDecor.osSemiBold18black,
               textAlign: TextAlign.center,
             ),
@@ -56,33 +56,12 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
             ),
             AppSpacerH(111.h),
             AppTextButton(
-              title: (isCOD || isPaid)
-                  ? S.of(context).gotohome
-                  : S.of(context).mkpymnt,
+              title: S.of(context).gotohome,
               onTap: () async {
-                if (isCOD || isPaid) {
-                  context.nav.pushNamedAndRemoveUntil(
-                    Routes.homeScreen,
-                    (route) => false,
-                  );
-                } else {
-                  if (!isMakingPayment) {
-                    isMakingPayment = true;
-                    final PaymentController pay = PaymentController(
-
-                    );
-
-                    isPaid = 
-                    await pay.makePayment(
-                      amount: widget.details['amount'] as String,
-                      currency: 'GBP',
-                      couponID: widget.details['couponID'] as String?,
-                      orderID: widget.details['id'] as String,
-                    );
-                    isMakingPayment = false;
-                    setState(() {});
-                  }
-                }
+                context.nav.pushNamedAndRemoveUntil(
+                  Routes.homeScreen,
+                  (route) => false,
+                );
               },
             ),
           ],

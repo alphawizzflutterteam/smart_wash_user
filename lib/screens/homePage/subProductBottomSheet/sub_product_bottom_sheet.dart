@@ -20,9 +20,10 @@ class SubPrductBottomSheet extends StatefulWidget {
   const SubPrductBottomSheet({
     super.key,
     required this.product,
+    required this.vid,
   });
   final Product product;
-
+  final String vid;
   @override
   State<SubPrductBottomSheet> createState() => _SubPrductBottomSheetState();
 }
@@ -34,6 +35,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    print("Vendorrrr: ${widget.vid}");
     return ValueListenableBuilder(
       valueListenable: Hive.box(AppHSC.cartBox).listenable(),
       builder: (
@@ -97,6 +99,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                             length,
                             widget.product.sbproducts![index],
                             cartsBox,
+                            widget.vid,
                           );
                         },
                       ),
@@ -126,7 +129,6 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                             processedData,
                           );
                           cartItems.add(data);
-                          
                         }
                         return Text(
                           "${settingsBox.get('currency')}${calculateTotal(cartItems)}",
@@ -175,6 +177,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
     int length,
     SubProduct subProduct,
     Box<dynamic> cartsBox,
+    String VenderId,
   ) {
     return Container(
       margin: const EdgeInsets.only(
@@ -320,6 +323,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                               productsQTY: 1,
                               unitPrice: subProduct.price!.toDouble(),
                               serviceName: widget.product.service!.name!,
+                              vendorId: widget.vid.toString()
                             );
                             cartbox.add(
                               newcartItrm.toMap(),

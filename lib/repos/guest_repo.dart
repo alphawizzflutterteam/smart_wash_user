@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dry_cleaners/misc/misc_global_variables.dart';
 import 'package:dry_cleaners/models/all_service_model/all_service_model.dart';
@@ -8,18 +10,14 @@ import 'package:dry_cleaners/offline_data/guest_data.dart';
 import 'package:dry_cleaners/offline_data/products_data.dart';
 import 'package:dry_cleaners/services/api_service.dart';
 
-
-
 abstract class IGuestRepo {
-
   Future<PromotionsModel> getPromotions();
   // Future<AllServiceModel> getServices();
-   Future<AllServiceModel> getServices(String id);
+  Future<AllServiceModel> getServices(String id);
 
   Future<VariationsModel> getVariations(String id);
-  Future<ProductsModel> getProducts(String servieID, String variationID);
-
-
+  Future<ProductsModel> getProducts(
+      String servieID, String variationID, String vid);
 }
 
 class GuestRepo implements IGuestRepo {
@@ -31,13 +29,10 @@ class GuestRepo implements IGuestRepo {
     return PromotionsModel.fromMap(reponse.data as Map<String, dynamic>);
   }
 
-
   @override
   Future<AllServiceModel> getServices(String id) async {
-
     final Response reponse = await _dio.get('/services?vendore_id=${id}');
     return AllServiceModel.fromMap(reponse.data as Map<String, dynamic>);
-
   }
 
   @override
@@ -47,18 +42,16 @@ class GuestRepo implements IGuestRepo {
   }
 
   @override
-  Future<ProductsModel> getProducts(String servieID, String variationID) async {
-    final Response reponse = await _dio
-        .get('/products?service_id=$servieID&variant_id=$variationID&search=');
-
+  Future<ProductsModel> getProducts(
+      String servieID, String variationID, String vid) async {
+    final Response reponse = await _dio.get(
+        '/products?service_id=$servieID&variant_id=$variationID&vendor_id=$vid&search=');
+    log(reponse.toString());
     return ProductsModel.fromMap(reponse.data as Map<String, dynamic>);
-
-
   }
 }
 
 class OfflineGuestRepo implements IGuestRepo {
-
   @override
   Future<PromotionsModel> getPromotions() async {
     await Future.delayed(apiDataDuration);
@@ -67,7 +60,6 @@ class OfflineGuestRepo implements IGuestRepo {
 
   @override
   Future<AllServiceModel> getServices(String id) async {
-
     await Future.delayed(apiDataDuration);
     return AllServiceModel.fromMap(OfflineGuestData.servicesData);
   }
@@ -79,7 +71,8 @@ class OfflineGuestRepo implements IGuestRepo {
   }
 
   @override
-  Future<ProductsModel> getProducts(String servieID, String variationID) async {
+  Future<ProductsModel> getProducts(
+      String servieID, String variationID, String vid) async {
     await Future.delayed(apiDataDuration);
     return ProductsModel.fromMap(ProductsDat.allProducts);
   }

@@ -15,7 +15,6 @@ Future<String> getToken() async {
       )
       .toString();
 
-  log(res);
   return res;
 }
 

@@ -1325,6 +1325,15 @@ class S {
     );
   }
 
+  String get rzrpay {
+    return Intl.message(
+      'Razorpay',
+      name: 'rzrpay',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Pay When Taking Delivery`
   String get pywhndlvry {
     return Intl.message(

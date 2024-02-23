@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dry_cleaners/constants/app_box_decoration.dart';
 import 'package:dry_cleaners/constants/app_text_decor.dart';
 import 'package:dry_cleaners/constants/hive_contants.dart';
@@ -18,8 +20,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../homePage/home_tab.dart';
 
@@ -32,11 +36,80 @@ class PaymentSection extends ConsumerWidget {
   });
   final Box appSettingsBox = Hive.box(AppHSC.appSettingsBox);
   int? couponID;
+  Razorpay? _razorpay;
   final TextEditingController instruction;
+  var address;
+  var pickUp;
+  var delivery;
   final PaymentType selectedPaymentType;
+  final List<CarItemHiveModel> cartItems = [];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Future<void> _handlePaymentSuccess(
+      PaymentSuccessResponse response,
+    ) async {
+      print("transaction id${response.paymentId!}");
+      ref
+          .watch(
+            placeOrdersProvider.notifier,
+          )
+          .addOrder(
+            OrderPlaceModel(
+              franchise_id: frenchId.toString(),
+              vendor_id: outletid.toString(),
+              deliver_type: selectedValue.toString(),
+              address_id: address,
+              pick_date:
+                  "${pickUp.dateTime.year}-${pickUp.dateTime.month}-${pickUp.dateTime.day}",
+              pick_hour: pickUp.schedule.hour.toString(),
+              delivery_date:
+                  "${delivery.dateTime.year}-${delivery.dateTime.month}-${delivery.dateTime.day}",
+              delivery_hour: delivery.schedule.hour.toString(),
+              coupon_id: couponID?.toString() ?? '',
+              instruction: instruction.text,
+              products: cartItems
+                  .map(
+                    (e) => OrderProductModel(
+                      id: e.productsId.toString(),
+                      quantity: e.productsQTY.toString(),
+                      subid: e.subProduct != null
+                          ? e.subProduct!.id.toString()
+                          : null,
+                    ),
+                  )
+                  .toList(),
+              additional_service_id: [],
+            ),
+          );
+    }
+
+    Future<void> _handlePaymentError(PaymentFailureResponse response) async {
+      log(response.message.toString());
+      Fluttertoast.showToast(msg: "Payment cancelled by user");
+    }
+
+    void _handleExternalWallet(ExternalWalletResponse response) {}
+    Future<void> openCheckout(amount) async {
+      double res = double.parse(amount.toString());
+      int pricerazorpayy = int.parse(res.toStringAsFixed(0)) * 100;
+      print("res: $res");
+      // Navigator.of(context).pop();
+      var options = {
+        'key': 'rzp_test_1DP5mmOlF5G5ag',
+        'amount': "$pricerazorpayy",
+        'name': 'Advertising',
+        'image': 'assets/images/alpha_logo-light.png',
+        'description': 'Advertising',
+      };
+      try {
+        print("object");
+        _razorpay?.open(options);
+      } catch (e) {
+        debugPrint('Error: e');
+      }
+    }
+
     ref.watch(couponProvider).maybeWhen(
           orElse: () {},
           loaded: (_) {
@@ -54,7 +127,7 @@ class PaymentSection extends ConsumerWidget {
         free = data.data!.feeCost!.toDouble();
       },
     );
-    final List<CarItemHiveModel> cartItems = [];
+
     return ValueListenableBuilder(
       valueListenable: Hive.box(AppHSC.cartBox).listenable(),
       builder: (
@@ -62,7 +135,6 @@ class PaymentSection extends ConsumerWidget {
         Box cartBox,
         Widget? child,
       ) {
-        final List<CarItemHiveModel> cartItems = [];
         for (var i = 0; i < cartBox.length; i++) {
           final Map<String, dynamic> processedData = {};
           final Map<dynamic, dynamic> unprocessedData =
@@ -140,15 +212,15 @@ class PaymentSection extends ConsumerWidget {
                                 ref
                                     .watch(orderProcessingProvider.notifier)
                                     .state = true;
-                                final pickUp = ref.watch(
+                                pickUp = ref.watch(
                                   scheduleProvider('Pick Up'),
                                 );
-                                final delivery = ref.watch(
+                                delivery = ref.watch(
                                   scheduleProvider(
                                     'Delivery',
                                   ),
                                 );
-                                final address = ref.watch(
+                                address = ref.watch(
                                   addressIDProvider,
                                 );
 
@@ -162,46 +234,71 @@ class PaymentSection extends ConsumerWidget {
                                     address != '' &&
                                     cartItems.isNotEmpty) {
                                   //Has All Data
-
-                                  await ref
-                                      .watch(
-                                        placeOrdersProvider.notifier,
-                                      )
-                                      .addOrder(
-                                        OrderPlaceModel(
-                                          franchise_id: frenchId.toString(),
-                                          vendor_id: outletid.toString(),
-                                          deliver_type:
-                                              selectedValue.toString(),
-                                          address_id: address,
-                                          pick_date:
-                                              "${pickUp.dateTime.year}-${pickUp.dateTime.month}-${pickUp.dateTime.day}",
-                                          pick_hour:
-                                              pickUp.schedule.hour.toString(),
-                                          delivery_date:
-                                              "${delivery.dateTime.year}-${delivery.dateTime.month}-${delivery.dateTime.day}",
-                                          delivery_hour:
-                                              delivery.schedule.hour.toString(),
-                                          coupon_id: couponID?.toString() ?? '',
-                                          instruction: instruction.text,
-                                          products: cartItems
-                                              .map(
-                                                (e) => OrderProductModel(
-                                                  id: e.productsId.toString(),
-                                                  quantity:
-                                                      e.productsQTY.toString(),
-                                                  subid: e.subProduct != null
-                                                      ? e.subProduct!.id
-                                                          .toString()
-                                                      : null,
-                                                ),
-                                              )
-                                              .toList(),
-                                          additional_service_id: [],
-                                        ),
-                                      );
+                                  print(selectedPaymentType);
+                                  if (selectedPaymentType ==
+                                      PaymentType.Razorpay) {
+                                    try {
+                                      _razorpay = Razorpay();
+                                      _razorpay?.on(
+                                          Razorpay.EVENT_PAYMENT_SUCCESS,
+                                          _handlePaymentSuccess);
+                                      _razorpay?.on(
+                                          Razorpay.EVENT_PAYMENT_ERROR,
+                                          _handlePaymentError);
+                                      _razorpay?.on(
+                                          Razorpay.EVENT_EXTERNAL_WALLET,
+                                          _handleExternalWallet);
+                                      await openCheckout(
+                                          '${(AppGFunctions.calculateTotal(cartItems) - ref.watch(discountAmountProvider)).toStringAsFixed(2)}');
+                                      // ref
+                                    } catch (e, stackTrace) {
+                                      print(stackTrace);
+                                      throw Exception(e);
+                                    }
+                                  } else {
+                                    ref
+                                        .watch(
+                                          placeOrdersProvider.notifier,
+                                        )
+                                        .addOrder(
+                                          OrderPlaceModel(
+                                            franchise_id: frenchId.toString(),
+                                            vendor_id: outletid.toString(),
+                                            deliver_type:
+                                                selectedValue.toString(),
+                                            address_id: address,
+                                            pick_date:
+                                                "${pickUp.dateTime.year}-${pickUp.dateTime.month}-${pickUp.dateTime.day}",
+                                            pick_hour:
+                                                pickUp.schedule.hour.toString(),
+                                            delivery_date:
+                                                "${delivery.dateTime.year}-${delivery.dateTime.month}-${delivery.dateTime.day}",
+                                            delivery_hour: delivery
+                                                .schedule.hour
+                                                .toString(),
+                                            coupon_id:
+                                                couponID?.toString() ?? '',
+                                            instruction: instruction.text,
+                                            products: cartItems
+                                                .map(
+                                                  (e) => OrderProductModel(
+                                                    id: e.productsId.toString(),
+                                                    quantity: e.productsQTY
+                                                        .toString(),
+                                                    subid: e.subProduct != null
+                                                        ? e.subProduct!.id
+                                                            .toString()
+                                                        : null,
+                                                  ),
+                                                )
+                                                .toList(),
+                                            additional_service_id: [],
+                                          ),
+                                        );
+                                  }
                                 } else {
                                   //Missing Data
+
                                   EasyLoading.showError(
                                     S.of(context).plsslctalflds,
                                   );

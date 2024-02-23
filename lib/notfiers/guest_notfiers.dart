@@ -16,7 +16,6 @@ class AllPromotionsNotifier extends StateNotifier<ApiState<PromotionsModel>> {
   final IGuestRepo repo;
 
   Future<void> getAllpromotions() async {
-
     state = const ApiState.loading();
     try {
       state = ApiState.loaded(
@@ -67,6 +66,7 @@ class AllServicerNotifier extends StateNotifier<ApiState<AllServiceModel>> {
     }
   }
 }
+
 class ServiceVariationsNotifier
     extends StateNotifier<ApiState<VariationsModel>> {
   ServiceVariationsNotifier(this.repo, this.id)
@@ -97,11 +97,11 @@ class ProductsNotifier extends StateNotifier<ApiState<ProductsModel>> {
   final IGuestRepo repo;
   final ProducServiceVariavtionDataModel data;
 
-  Future<void> getAllVariations() async {
+  Future<void> getAllVariations({req}) async {
     state = const ApiState.loading();
     try {
       state = ApiState.loaded(
-        data: await repo.getProducts(data.servieID, data.variationID),
+        data: await repo.getProducts(data.servieID, data.variationID,data.vid.toString()),
       );
     } catch (e) {
       print("exception==========================${e}");
@@ -113,18 +113,22 @@ class ProductsNotifier extends StateNotifier<ApiState<ProductsModel>> {
 class ProducServiceVariavtionDataModel {
   String servieID;
   String variationID;
+  String vid;
   ProducServiceVariavtionDataModel({
     required this.servieID,
     required this.variationID,
+    required this.vid,
   });
 
   ProducServiceVariavtionDataModel copyWith({
     String? servieID,
     String? variationID,
+    String? vid,
   }) {
     return ProducServiceVariavtionDataModel(
       servieID: servieID ?? this.servieID,
       variationID: variationID ?? this.variationID,
+      vid: vid ?? this.vid,
     );
   }
 }

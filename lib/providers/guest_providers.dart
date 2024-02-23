@@ -8,8 +8,6 @@ import 'package:dry_cleaners/repos/guest_repo.dart';
 import 'package:dry_cleaners/services/api_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
-
 final guestRepoProvider = Provider<IGuestRepo>((ref) {
   return ref.watch(isAppLive) ? GuestRepo() : OfflineGuestRepo();
 });
@@ -23,9 +21,6 @@ final allPromotionsProvider =
 });
 //
 
-
-
-
 //Gets All Services
 
 // final allServicesProvider = StateNotifierProvider<AllServicerNotifier, ApiState<AllServiceModel>>(
@@ -33,13 +28,11 @@ final allPromotionsProvider =
 //   return AllServicerNotifier(ref.watch(guestRepoProvider));
 // });
 
-
-final allServicesProvider = StateNotifierProvider.family<
-    AllServicerNotifier, ApiState<AllServiceModel>, String>((ref, id) {
-  return  AllServicerNotifier(ref.watch(guestRepoProvider), id);
+final allServicesProvider = StateNotifierProvider.family<AllServicerNotifier,
+    ApiState<AllServiceModel>, String>((ref, id) {
+  return AllServicerNotifier(ref.watch(guestRepoProvider), id);
 });
 //Gets All Service Variations
-
 
 final servicesVariationsProvider = StateNotifierProvider.family<
     ServiceVariationsNotifier, ApiState<VariationsModel>, String>((ref, id) {
@@ -58,5 +51,6 @@ final productsProvider = StateNotifierProvider.autoDispose<ProductsNotifier,
 //Gets All Products
 final productsFilterProvider =
     StateProvider<ProducServiceVariavtionDataModel>((ref) {
-  return ProducServiceVariavtionDataModel(servieID: '', variationID: '');
+  return ProducServiceVariavtionDataModel(
+      servieID: '', variationID: '', vid: '');
 });

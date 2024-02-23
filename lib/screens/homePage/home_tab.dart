@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -1456,7 +1457,7 @@ class _OutletScreenState extends State<OutletScreen> {
       var result = await response.stream.bytesToString();
       var finalresult = GetOutletModel.fromJson(jsonDecode(result));
 
-      print("rrrrrrrrrrrr");
+      log(finalresult.toJson().toString());
 
       setState(() {
         getOutletModel = finalresult;
@@ -1694,7 +1695,11 @@ class _ServicessState extends ConsumerState<Servicess> {
                                                               .notifier,
                                                         )
                                                         .state = 0;
-
+                                                    entry.value.vid = widget
+                                                        .venderId
+                                                        .toString();
+                                                    print(
+                                                        "Entry: ${entry.value}");
                                                     context.nav.pushNamed(
                                                       Routes.chooseItemScreen,
                                                       //arguments: [entry.value,widget.frenchId,widget.venderId],

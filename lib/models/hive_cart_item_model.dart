@@ -12,6 +12,7 @@ class CarItemHiveModel {
   String productsImage;
   String serviceName;
   SubProduct? subProduct;
+  String? vendorId;
 
   CarItemHiveModel({
     required this.productsId,
@@ -22,6 +23,7 @@ class CarItemHiveModel {
     required this.productsImage,
     required this.serviceName,
     this.subProduct,
+    this.vendorId,
   });
 
   CarItemHiveModel copyWith({
@@ -33,6 +35,7 @@ class CarItemHiveModel {
     String? productsImage,
     String? serviceName,
     SubProduct? subProduct,
+    String? vendorId,
   }) {
     return CarItemHiveModel(
       productsId: productsId ?? this.productsId,
@@ -43,6 +46,7 @@ class CarItemHiveModel {
       productsImage: productsImage ?? this.productsImage,
       serviceName: serviceName ?? this.serviceName,
       subProduct: subProduct ?? this.subProduct,
+      vendorId: vendorId ?? this.vendorId,
     );
   }
 
@@ -56,6 +60,7 @@ class CarItemHiveModel {
       'productsImage': productsImage,
       'serviceName': serviceName,
       'subProduct': subProduct?.toMap(),
+      'vendorId': vendorId,
     };
   }
 
@@ -72,6 +77,7 @@ class CarItemHiveModel {
       subProduct: map['subProduct'] != null
           ? SubProduct.fromMap(map['subProduct'] as Map<String, dynamic>)
           : null,
+      vendorId: map['vendorId'] != null ? map['vendorId'] as String : null,
     );
   }
 
@@ -82,7 +88,7 @@ class CarItemHiveModel {
 
   @override
   String toString() {
-    return 'CarItemHiveModel(productsId: $productsId, subproductsId: $subproductsId, productsQTY: $productsQTY, unitPrice: $unitPrice, productsName: $productsName, productsImage: $productsImage, serviceName: $serviceName, subProduct: $subProduct)';
+    return 'CarItemHiveModel(productsId: $productsId, subproductsId: $subproductsId, productsQTY: $productsQTY, unitPrice: $unitPrice, productsName: $productsName, productsImage: $productsImage, serviceName: $serviceName, subProduct: $subProduct, vendorId: $vendorId)';
   }
 
   @override
@@ -96,7 +102,8 @@ class CarItemHiveModel {
         other.productsName == productsName &&
         other.productsImage == productsImage &&
         other.serviceName == serviceName &&
-        other.subProduct == subProduct;
+        other.subProduct == subProduct &&
+        other.vendorId == vendorId;
   }
 
   @override
@@ -108,7 +115,8 @@ class CarItemHiveModel {
         productsName.hashCode ^
         productsImage.hashCode ^
         serviceName.hashCode ^
-        subProduct.hashCode;
+        subProduct.hashCode ^
+        vendorId.hashCode;
   }
 }
 

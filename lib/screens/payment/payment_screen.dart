@@ -338,6 +338,19 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                 isSelected:
                                     selectedPaymentType == PaymentType.cod,
                               ),
+                              AppSpacerH(11.h),
+                              PaymentMethodCard(
+                                onTap: () {
+                                  setState(() {
+                                    selectedPaymentType = PaymentType.Razorpay;
+                                  });
+                                },
+                                imageLocation: 'assets/images/logo_cod.png',
+                                title: S.of(context).rzrpay,
+                                subtitle: 'Pay Online',
+                                isSelected:
+                                    selectedPaymentType == PaymentType.Razorpay,
+                              ),
 
                               // AppSpacerH(11.h),
                               // PaymentMethodCard(
@@ -374,4 +387,4 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
   }
 }
 
-enum PaymentType { cod }
+enum PaymentType { cod, Razorpay }

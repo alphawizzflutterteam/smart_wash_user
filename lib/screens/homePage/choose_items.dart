@@ -44,6 +44,7 @@ class ChooseItems extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("vENJDKHFGDJK: ${service.vid}");
     final finalIndex = ref.watch(itemSelectMenuIndexProvider);
     ref.watch(servicesVariationsProvider(service.id.toString()));
     final ProducServiceVariavtionDataModel productFilter =
@@ -54,6 +55,11 @@ class ChooseItems extends ConsumerWidget {
           return state.copyWith(servieID: service.id!.toString());
         });
       });
+      ref.watch(productsFilterProvider.notifier).state =
+          ProducServiceVariavtionDataModel(
+              servieID: service.id.toString(),
+              variationID: '',
+              vid: service.vid.toString());
     }
 
     if (productFilter.variationID == '') {
@@ -92,10 +98,14 @@ class ChooseItems extends ConsumerWidget {
         free = data.data!.feeCost!.toDouble();
       },
     );
+
     return WillPopScope(
       onWillPop: () {
         ref.watch(productsFilterProvider.notifier).state =
-            ProducServiceVariavtionDataModel(servieID: '', variationID: '');
+            ProducServiceVariavtionDataModel(
+                servieID: service.id.toString(),
+                variationID: '',
+                vid: service.vid.toString());
         return Future.value(true);
       },
       child: ScreenWrapper(
@@ -268,6 +278,7 @@ class ChooseItems extends ConsumerWidget {
                                         _.data.data!.products![index];
                                     return ChooseItemCard(
                                       product: product,
+                                      vid: service.vid.toString(),
                                     );
                                   }
                                 },
@@ -443,10 +454,11 @@ class ChooseItemCard extends StatefulWidget {
   const ChooseItemCard({
     super.key,
     required this.product,
+    required this.vid,
   });
 
   final Product product;
-
+  final String vid;
   @override
   State<ChooseItemCard> createState() => _ChooseItemCardState();
 }
@@ -494,7 +506,8 @@ class _ChooseItemCardState extends State<ChooseItemCard> {
               final data = CarItemHiveModel.fromMap(processedData);
               keyAt = i;
               if (data.productsId == widget.product.id &&
-                  data.productsName == widget.product.name) {
+                  data.productsName == widget.product.name &&
+                  data.vendorId == widget.vid) {
                 inCart = true;
                 break;
               }
@@ -604,15 +617,75 @@ class _ChooseItemCardState extends State<ChooseItemCard> {
                                     width: 120.w,
                                     height: 36.h,
                                     onTap: () {
-                                      showBottomSheet(
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (context) {
-                                          return SubPrductBottomSheet(
-                                            product: widget.product,
+                                      if (cartsBox.isEmpty) {
+                                        showBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (context) {
+                                            return SubPrductBottomSheet(
+                                              product: widget.product,
+                                              vid: widget.vid.toString(),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        final Map<String, dynamic>
+                                            processedData = {};
+                                        final Map<dynamic, dynamic>
+                                            unprocessedData = cartsBox.getAt(
+                                          keyAt!,
+                                        ) as Map<dynamic, dynamic>;
+
+                                        unprocessedData.forEach((
+                                          key,
+                                          value,
+                                        ) {
+                                          processedData[key.toString()] = value;
+                                        });
+
+                                        final CarItemHiveModel data =
+                                            CarItemHiveModel.fromMap(
+                                          processedData,
+                                        );
+
+                                        if (data.vendorId == widget.vid) {
+                                          showBottomSheet(
+                                            backgroundColor: Colors.transparent,
+                                            context: context,
+                                            builder: (context) {
+                                              return SubPrductBottomSheet(
+                                                product: widget.product,
+                                                vid: widget.vid.toString(),
+                                              );
+                                            },
                                           );
-                                        },
-                                      );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: Text(
+                                                  "You have products from different vendor in cart. Do you want to checkout this products?"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("NO"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    cartsBox.clear();
+                                                    inCart = true;
+                                                    Navigator.pop(context);
+                                                    setState(() {});
+                                                  },
+                                                  child: Text("Yes"),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      }
                                     },
                                   )
                                 ] else ...[
@@ -659,15 +732,45 @@ class _ChooseItemCardState extends State<ChooseItemCard> {
                                             }
                                           },
                                           onInc: () {
-                                            cartbox.putAt(
-                                              keyAt!,
-                                              data
-                                                  .copyWith(
-                                                    productsQTY:
-                                                        data.productsQTY + 1,
-                                                  )
-                                                  .toMap(),
-                                            );
+                                            if (data.vendorId == widget.vid) {
+                                              cartbox.putAt(
+                                                keyAt!,
+                                                data
+                                                    .copyWith(
+                                                      productsQTY:
+                                                          data.productsQTY + 1,
+                                                    )
+                                                    .toMap(),
+                                              );
+                                            } else {
+                                              cartbox.clear();
+                                              print(widget.product.name);
+                                              final newcartItrm =
+                                                  CarItemHiveModel(
+                                                      productsId:
+                                                          widget.product.id ??
+                                                              0,
+                                                      productsName:
+                                                          widget.product.name ??
+                                                              '',
+                                                      productsImage: widget
+                                                          .product.imagePath!,
+                                                      productsQTY: 1,
+                                                      unitPrice: widget
+                                                          .product.currentPrice!
+                                                          .toDouble(),
+                                                      serviceName: widget
+                                                          .product
+                                                          .service!
+                                                          .name!,
+                                                      vendorId: widget.vid
+                                                          .toString());
+                                              cartbox.add(
+                                                newcartItrm.toMap(),
+                                              );
+                                              Fluttertoast.showToast(
+                                                  msg: 'Item added to cart');
+                                            }
                                           },
                                         );
                                       } else {
@@ -689,6 +792,7 @@ class _ChooseItemCardState extends State<ChooseItemCard> {
                                                     .product.currentPrice!,
                                                 serviceName: widget
                                                     .product.service!.name!,
+                                                vendorId: widget.vid,
                                               );
                                               cartbox.add(newcartItrm.toMap());
                                             }

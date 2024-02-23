@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class Service {
   int? id;
+  String? vid;
   String? name;
   dynamic nameBn;
   String? description;
@@ -15,11 +16,12 @@ class Service {
     this.description,
     this.descriptionBn,
     this.imagePath,
+    this.vid,
   });
 
   @override
   String toString() {
-    return 'Service(id: $id, name: $name, nameBn: $nameBn, description: $description, descriptionBn: $descriptionBn, imagePath: $imagePath)';
+    return 'Service(id: $id, name: $name, nameBn: $nameBn, description: $description, descriptionBn: $descriptionBn, imagePath: $imagePath, vid: $vid)';
   }
 
   factory Service.fromMap(Map<String, dynamic> data) => Service(
@@ -29,6 +31,7 @@ class Service {
         description: data['description'] as String?,
         descriptionBn: data['description_bn'] as dynamic,
         imagePath: data['image_path'] as String?,
+        vid: data['vid'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,6 +41,7 @@ class Service {
         'description': description,
         'description_bn': descriptionBn,
         'image_path': imagePath,
+        'vid': vid,
       };
 
   /// `dart:convert`
@@ -59,6 +63,7 @@ class Service {
     String? description,
     dynamic descriptionBn,
     String? imagePath,
+    String? vid,
   }) {
     return Service(
       id: id ?? this.id,
@@ -67,6 +72,7 @@ class Service {
       description: description ?? this.description,
       descriptionBn: descriptionBn ?? this.descriptionBn,
       imagePath: imagePath ?? this.imagePath,
+      vid: vid ?? this.vid,
     );
   }
 }
