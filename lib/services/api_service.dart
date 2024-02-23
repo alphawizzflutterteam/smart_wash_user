@@ -1,7 +1,23 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dry_cleaners/constants/config.dart';
 import 'package:dry_cleaners/services/interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<String> getToken() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  String res = await prefs
+      .getString(
+        'bearerToken',
+      )
+      .toString();
+
+  log(res);
+  return res;
+}
 
 Dio getDio() {
   final Dio dio = Dio();
@@ -11,8 +27,15 @@ Dio getDio() {
   dio.options.connectTimeout = 10000;
   dio.options.receiveTimeout = 10000;
   // _dio.options.headers = {'Content-Type': 'application/json'};
-  dio.options.headers = {'Accept': 'application/json'};
-  dio.options.headers = {'accept': 'application/json'};
+  var toekn = getToken();
+  dio.options.headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $toekn'
+  };
+  dio.options.headers = {
+    'accept': 'application/json',
+    'Authorization': 'Bearer $toekn'
+  };
   dio.options.followRedirects = false;
 
   //for Logging the Request And response
@@ -21,6 +44,9 @@ Dio getDio() {
       requestHeader: true,
       requestBody: true,
       responseHeader: true,
+      logPrint: (object) {
+        getToken();
+      },
     ),
   );
 

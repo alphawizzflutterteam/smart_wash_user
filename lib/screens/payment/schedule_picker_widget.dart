@@ -49,9 +49,7 @@ class _ShedulePickerState extends ConsumerState<ShedulePicker>
           context.nav.pushNamed(Routes.deilverySchedulePickerScreen);
         }
       },
-      child:
-
-      Container(
+      child: Container(
         padding: EdgeInsets.all(5.h),
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -86,15 +84,21 @@ class _ShedulePickerState extends ConsumerState<ShedulePicker>
               children: [
                 const Icon(Icons.calendar_today_outlined),
                 AppSpacerW(5.w),
-                Expanded(
-                  child: FittedBox(
-                    child: Text(
-                      data != null
-                          ? DateFormat('MMMM d, yyyy').format(data.dateTime)
-                          : S.of(context).unslctd,
-                    ),
-                  ),
-                )
+                data == null
+                    ? Text(
+                        S.of(context).unslctd,
+                        style: TextStyle(fontSize: 14),
+                      )
+                    : Expanded(
+                        child: FittedBox(
+                          child: Text(
+                            DateFormat('MMMM d, yyyy')
+                                .format(data!.dateTime)
+                                .toString(),
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      )
               ],
             ),
             AppSpacerH(10.h),

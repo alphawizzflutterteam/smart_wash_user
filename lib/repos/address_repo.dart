@@ -30,6 +30,7 @@ class AddressRepo implements IAddressRepo {
     Map<String, dynamic> address,
     String addressID,
   ) async {
+    print(address.toString());
     await _dio.post(
       '/addresses/$addressID',
       data: FormData.fromMap(address),

@@ -46,6 +46,7 @@ class OrderRepo implements IOrderRepo {
 
   @override
   Future<AddOrderModel> addOrder(OrderPlaceModel orderPlaceModel) async {
+    log(orderPlaceModel.toMap().toString());
     final response = await _dio.post(
       '/orders',
       data: FormData.fromMap(orderPlaceModel.toMap()),

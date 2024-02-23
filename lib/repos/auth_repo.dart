@@ -71,7 +71,12 @@ class AuthRepo extends IAuthRepo {
         },
       ),
     );
-    log(response.data.toString() + "login response");
+    //data["data"]["access"]["auth_type"]
+    
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('bearerToken', response.data["data"]["access"]["token"].toString());
+    // log(response.data.toString() + "login response");
     return LoginModel.fromMap(response.data as Map<String, dynamic>);
   }
 

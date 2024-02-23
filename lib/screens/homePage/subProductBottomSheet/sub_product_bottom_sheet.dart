@@ -126,6 +126,7 @@ class _SubPrductBottomSheetState extends State<SubPrductBottomSheet> {
                             processedData,
                           );
                           cartItems.add(data);
+                          
                         }
                         return Text(
                           "${settingsBox.get('currency')}${calculateTotal(cartItems)}",

@@ -47,9 +47,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             processedData[key.toString()] = value;
           });
 
-          return
-
-            ValueListenableBuilder(
+          return ValueListenableBuilder(
             valueListenable: Hive.box(AppHSC.authBox).listenable(),
             builder: (context, Box authBox, Widget? child) {
               return Container(
@@ -72,11 +70,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           ),
                           GestureDetector(
                             onTap: () async {
-
-
                               if (image == null) {
-
-
                                 // final ImagePicker picker = ImagePicker();
                                 // // Pick an image
                                 // final XFile? images = await picker.pickImage(
@@ -88,20 +82,16 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 //   });
                                 // }
 
-
-                                final pickedFile = await ImagePicker().pickImage(
+                                final pickedFile =
+                                    await ImagePicker().pickImage(
                                   source: ImageSource.gallery,
-                                  imageQuality: 50, // You can adjust the image quality here
+                                  imageQuality:
+                                      50, // You can adjust the image quality here
                                 );
 
                                 if (pickedFile != null) {
-
-                                  setState((){
-
-
+                                  setState(() {
                                     image = File(pickedFile.path);
-
-
                                   });
                                 }
                               } else {
@@ -232,6 +222,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 ),
                                 AppSpacerH(20.h),
                                 FormBuilderTextField(
+                                  keyboardType: TextInputType.number,
                                   validator: FormBuilderValidators.compose([
                                     FormBuilderValidators.numeric(),
                                     FormBuilderValidators.maxLength(12),
@@ -249,20 +240,23 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                         initial: (_) => AppTextButton(
                                           title: S.of(context).updtaprl,
                                           onTap: () {
-
                                             if (_formkey.currentState!
                                                 .saveAndValidate()) {
-
-                                              ref.watch(profileUpdateProvider.notifier,).updateProfile(_formkey.currentState!.value, image,);
-
-
+                                              ref
+                                                  .watch(
+                                                    profileUpdateProvider
+                                                        .notifier,
+                                                  )
+                                                  .updateProfile(
+                                                    _formkey
+                                                        .currentState!.value,
+                                                    image,
+                                                  );
                                             }
                                           },
                                         ),
                                         loading: (_) => const LoadingWidget(),
                                         loaded: (_) {
-
-
                                           Future.delayed(transissionDuration)
                                               .then(
                                             (value) {

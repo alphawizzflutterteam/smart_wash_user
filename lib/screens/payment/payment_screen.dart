@@ -22,7 +22,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-String ?selectedValue;
+
+String? selectedValue;
 
 class CheckOutScreen extends ConsumerStatefulWidget {
   const CheckOutScreen({super.key});
@@ -37,13 +38,10 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
   final Box appSettingsBox = Hive.box(AppHSC.appSettingsBox);
   PaymentType selectedPaymentType = PaymentType.cod;
 
-
   String? male;
 
   @override
   Widget build(BuildContext context) {
-
-
     // int? couponID;
     ref.watch(addressIDProvider);
     ref.watch(dateProvider('Pick Up'));
@@ -101,8 +99,6 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
-
                               Text(
                                 S.of(context).shptpe,
                                 style: AppTextDecor.osSemiBold18black,
@@ -110,52 +106,53 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                               // const CutomDatePicker('Collection Date'),
                               AppSpacerH(10.h),
 
-
-
-                    Row(
-                      children: [
-                        Radio(
-                            value: "1",
-                            groupValue: selectedValue,
-                            activeColor:  Colors.blueAccent,
-                            onChanged: (val) {
-                              setState(() {
-                                selectedValue = val.toString();
-                                print("${selectedValue}");
-                              });
-                            }
-                        ),
-
-                        SizedBox(width: 20,),
-                        Text(
-                          S.of(context).selfpic,
-                          style: AppTextDecor.osSemiBold18black,
-                        ),
-                      ],
-                    ),
-
-                    Row(
-                      children: [
-                        Radio(
-                            value: "2",
-                            groupValue: selectedValue,
-                            activeColor:  Colors.blueAccent,
-                            onChanged: (val) {
-                              setState(() {
-                                selectedValue = val.toString();
-                                print("${selectedValue}");
-                              });
-                            }
-                        ),
-
-                        SizedBox(width: 20,),
-                        Text(
-                              S.of(context).pickupbydriver,
-                              style: AppTextDecor.osSemiBold18black,
-                            ),
-                             ]),
-
-
+                              Row(
+                                children: [
+                                  Radio(
+                                      value: "1",
+                                      visualDensity: VisualDensity.compact,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      groupValue: selectedValue,
+                                      activeColor: Colors.blueAccent,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          selectedValue = val.toString();
+                                          print("${selectedValue}");
+                                        });
+                                      }),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    S.of(context).selfpic,
+                                    style: AppTextDecor.osSemiBold18black,
+                                  ),
+                                ],
+                              ),
+                              Row(children: [
+                                Radio(
+                                    value: "2",
+                                    groupValue: selectedValue,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity.compact,
+                                    activeColor: Colors.blueAccent,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        selectedValue = val.toString();
+                                        print("${selectedValue}");
+                                      });
+                                    }),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  S.of(context).pickupbydriver,
+                                  style: AppTextDecor.osSemiBold18black,
+                                ),
+                              ]),
+                              AppSpacerH(10.h),
                               Text(
                                 S.of(context).shpngschdl,
                                 style: AppTextDecor.osSemiBold18black,
@@ -163,18 +160,12 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                               // const CutomDatePicker('Collection Date'),
                               AppSpacerH(10.h),
 
-
-
                               Row(
-
                                 children: [
-
-
                                   Expanded(
                                     child: ShedulePicker(
                                       image: 'assets/images/pickup-car.png',
                                       title: S.of(context).pickupat,
-
                                     ),
                                   ),
                                   AppSpacerW(10.w),
@@ -182,13 +173,10 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                     child: ShedulePicker(
                                       image: 'assets/images/pick-up-truck.png',
                                       title: S.of(context).dlvryat,
-
                                     ),
                                   ),
                                 ],
                               ),
-
-
 
                               AppSpacerH(10.h),
                             ],
@@ -274,10 +262,15 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                                 .map(
                                                   (e) => DropdownMenuItem(
                                                     value: e.id.toString(),
-                                                    child: Text(
-                                                      AppGFunctions
-                                                          .processAdAddess(
-                                                        e,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 5),
+                                                      child: Text(
+                                                        AppGFunctions
+                                                            .processAdAddess(
+                                                          e,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -291,8 +284,6 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                           ),
                         ),
                         AppSpacerH(10.h),
-
-
                         Container(
                           width: 375.w,
                           padding: EdgeInsets.symmetric(
@@ -319,11 +310,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                             ],
                           ),
                         ),
-
-
                         AppSpacerH(10.h),
-
-
                         Container(
                           width: 375.w,
                           padding: EdgeInsets.symmetric(
@@ -367,12 +354,9 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                               //   isSelected: selectedPaymentType ==
                               //       PaymentType.onlinePayment,
                               // ),
-
                             ],
                           ),
                         ),
-
-
                         PaymentSection(
                           instruction: _instruction,
                           selectedPaymentType: selectedPaymentType,

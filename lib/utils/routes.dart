@@ -163,7 +163,7 @@ Route generatedRoutes(RouteSettings settings) {
       child = FaqScreen();
       break;
     case Routes.contactUsScreen:
-      child = const ContactUs();
+      child = ContactUs();
       break;
     case Routes.schedulePickerScreen:
       child = const SchedulerPicker();
