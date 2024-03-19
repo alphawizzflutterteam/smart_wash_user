@@ -121,7 +121,7 @@ abstract class NetworkExceptions with _$NetworkExceptions {
   static NetworkExceptions getDioException(error) {
     if (error is Exception) {
       try {
-        NetworkExceptions networkExceptions;
+        NetworkExceptions networkExceptions = NetworkExceptions.badRequest();
         if (error is DioError) {
           String? msg = error.response?.data['message'] as String?;
           final Map<String, dynamic>? xerror =
@@ -134,17 +134,17 @@ abstract class NetworkExceptions with _$NetworkExceptions {
             case DioErrorType.cancel:
               networkExceptions = const NetworkExceptions.requestCancelled();
               break;
-            case DioErrorType.connectTimeout:
+            case DioExceptionType.connectionTimeout:
               networkExceptions = const NetworkExceptions.requestTimeout();
               break;
-            case DioErrorType.other:
+            case DioExceptionType.unknown:
               networkExceptions =
                   const NetworkExceptions.noInternetConnection();
               break;
             case DioErrorType.receiveTimeout:
               networkExceptions = const NetworkExceptions.sendTimeout();
               break;
-            case DioErrorType.response:
+            case DioExceptionType.badResponse:
               switch (error.response!.statusCode) {
                 case 302:
                   networkExceptions = NetworkExceptions.defaultError(

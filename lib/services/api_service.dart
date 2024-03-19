@@ -23,8 +23,8 @@ Dio getDio() {
 
   //Basic Configuration
   dio.options.baseUrl = AppConfig.baseUrl;
-  dio.options.connectTimeout = 10000;
-  dio.options.receiveTimeout = 10000;
+  dio.options.connectTimeout = Duration(seconds: 60);
+  dio.options.receiveTimeout = Duration(seconds: 60);
   // _dio.options.headers = {'Content-Type': 'application/json'};
   var toekn = getToken();
   dio.options.headers = {

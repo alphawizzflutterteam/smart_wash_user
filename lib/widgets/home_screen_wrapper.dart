@@ -44,8 +44,8 @@ class HomeScreenWrapper extends ConsumerWidget {
     return Scaffold(
       body: UpgradeAlert(
         upgrader: Upgrader(
-          showIgnore: false,
-          showLater: false,
+          // showIgnore: false,
+          // showLater: false,
           durationUntilAlertAgain: const Duration(minutes: 10),
         ),
         child: Container(
