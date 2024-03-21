@@ -1456,6 +1456,7 @@ class _OutletScreenState extends State<OutletScreen> {
     if (response.statusCode == 200) {
       var result = await response.stream.bytesToString();
       var finalresult = GetOutletModel.fromJson(jsonDecode(result));
+      print("getoutlet respinse" + finalresult.toJson().toString());
 
       log(finalresult.toJson().toString());
 

@@ -51,6 +51,8 @@ class PlaceOrderNotifier extends StateNotifier<ApiState<AddOrderModel>> {
 
   Future<void> addOrder(OrderPlaceModel orderPlaceModel) async {
     state = const ApiState.loading();
+
+    print(orderPlaceModel.toJson().toString());
     try {
       state = ApiState.loaded(data: await _repo.addOrder(orderPlaceModel));
     } catch (e) {

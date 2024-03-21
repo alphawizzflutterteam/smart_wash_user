@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppGFunctions {
   AppGFunctions._();
@@ -16,9 +17,7 @@ class AppGFunctions {
     required Color color,
     Brightness? iconBrightness,
     Brightness? brightness,
-  })
-
-  {
+  }) {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: color, //or set color with: Color(0xFF0000FF)
@@ -42,9 +41,10 @@ class AppGFunctions {
           child: Text(
             title,
             style: AppTextDecor.osRegular14black,
-            textAlign: Hive.box(AppHSC.appSettingsBox).get(AppHSC.appLocal).toString() ==
-                      "ar"
-                  
+            textAlign: Hive.box(AppHSC.appSettingsBox)
+                        .get(AppHSC.appLocal)
+                        .toString() ==
+                    "ar"
                 ? TextAlign.right
                 : TextAlign.left,
           ),
@@ -75,10 +75,11 @@ class AppGFunctions {
           child: Text(
             title,
             style: AppTextDecor.osRegular14black,
-            textAlign: Hive.box(AppHSC.appSettingsBox).get(AppHSC.appLocal).toString() ==
-                      "ar"
-                  ?
-                 TextAlign.right
+            textAlign: Hive.box(AppHSC.appSettingsBox)
+                        .get(AppHSC.appLocal)
+                        .toString() ==
+                    "ar"
+                ? TextAlign.right
                 : TextAlign.left,
           ),
         ),
@@ -165,11 +166,19 @@ class AppGFunctions {
 
     return modadresses;
   }
+
   static double calculateTotal(List<CarItemHiveModel> cartItems) {
     double amount = 0;
     for (final element in cartItems) {
       amount += element.productsQTY * element.unitPrice;
     }
+    saveAmount(amount.toString());
+
     return amount;
+  }
+
+  static saveAmount(String amount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("amountFinal", amount);
   }
 }

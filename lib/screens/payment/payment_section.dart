@@ -29,11 +29,16 @@ import '../homePage/home_tab.dart';
 
 // ignore: must_be_immutable
 class PaymentSection extends ConsumerWidget {
-  PaymentSection({
-    super.key,
-    required this.instruction,
-    required this.selectedPaymentType,
-  });
+  PaymentSection(this.couponIdSelected,
+      {super.key,
+      required this.instruction,
+      required this.selectedPaymentType,
+      required this.couponAmount,
+      required this.payableAmount});
+  final String couponAmount;
+  final String payableAmount;
+  final int couponIdSelected;
+
   final Box appSettingsBox = Hive.box(AppHSC.appSettingsBox);
   int? couponID;
   Razorpay? _razorpay;
@@ -46,6 +51,9 @@ class PaymentSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (couponIdSelected != 0) {
+      couponID = couponIdSelected;
+    }
     Future<void> _handlePaymentSuccess(
       PaymentSuccessResponse response,
     ) async {
@@ -92,7 +100,9 @@ class PaymentSection extends ConsumerWidget {
     void _handleExternalWallet(ExternalWalletResponse response) {}
     Future<void> openCheckout(amount) async {
       double res = double.parse(amount.toString());
-      int pricerazorpayy = int.parse(res.toStringAsFixed(0)) * 100;
+      int pricerazorpayy = payableAmount != ""
+          ? double.parse(payableAmount).toInt() * 100
+          : int.parse(res.toStringAsFixed(0)) * 100;
       print("res: $res");
       // Navigator.of(context).pop();
       var options = {
@@ -172,26 +182,61 @@ class PaymentSection extends ConsumerWidget {
                                 S.of(context).ttlpybl,
                                 style: AppTextDecor.osSemiBold18black,
                               ),
-                              if (AppGFunctions.calculateTotal(
-                                    cartItems,
-                                  ).toInt() <
-                                  free!) ...[
+                              if (payableAmount != "") ...[
                                 Text(
-                                  '${appSettingsBox.get('currency') ?? '\$'}${(AppGFunctions.calculateTotal(cartItems) + dlvrychrg! - ref.watch(discountAmountProvider)).toStringAsFixed(2)}',
+                                  "${appSettingsBox.get('currency')}" +
+                                      payableAmount,
                                   style: AppTextDecor.osBold14black,
-                                ),
+                                )
                               ] else ...[
-                                Text(
-                                  '${appSettingsBox.get('currency') ?? '\$'}${(AppGFunctions.calculateTotal(cartItems) - ref.watch(discountAmountProvider)).toStringAsFixed(2)}',
-                                  style: AppTextDecor.osSemiBold18black,
-                                ),
-                              ],
+                                if (AppGFunctions.calculateTotal(
+                                      cartItems,
+                                    ).toInt() <
+                                    free!) ...[
+                                  Text(
+                                    '${appSettingsBox.get('currency') ?? '\$'}${(AppGFunctions.calculateTotal(cartItems) + dlvrychrg! - ref.watch(discountAmountProvider)).toStringAsFixed(2)}',
+                                    style: AppTextDecor.osBold14black,
+                                  ),
+                                ] else ...[
+                                  Text(
+                                    '${appSettingsBox.get('currency') ?? '\$'}${(AppGFunctions.calculateTotal(cartItems) - ref.watch(discountAmountProvider)).toStringAsFixed(2)}',
+                                    style: AppTextDecor.osSemiBold18black,
+                                  ),
+                                ],
+                              ]
+
                               // Text(
                               //   '${appSettingsBox.get('currency') ?? '\$'}${(calculateTotal(cartItems) + dlvrychrg! - ref.watch(discountAmountProvider)).toStringAsFixed(2)}',
                               //   style: AppTextDecor.osSemiBold18black,
                               // ),
                             ],
                           ),
+                          // couponAmount != ""
+                          //     ? Row(
+                          //         mainAxisAlignment:
+                          //             MainAxisAlignment.spaceBetween,
+                          //         children: [
+                          //           Text(
+                          //             "Discount",
+                          //             style: AppTextDecor.osSemiBold18black,
+                          //           ),
+
+                          //           Text(
+                          //             '${appSettingsBox.get('currency') ?? '\$'}' +
+                          //                 double.parse(couponAmount == ""
+                          //                         ? "0"
+                          //                         : couponAmount)
+                          //                     .toString(),
+                          //             style: AppTextDecor.osBold14black,
+                          //           ),
+
+                          //           // Text(
+                          //           //   '${appSettingsBox.get('currency') ?? '\$'}${(calculateTotal(cartItems) + dlvrychrg! - ref.watch(discountAmountProvider)).toStringAsFixed(2)}',
+                          //           //   style: AppTextDecor.osSemiBold18black,
+                          //           // ),
+                          //         ],
+                          //       )
+                          //     : Container(),
                           AppSpacerH(10.h),
                           AppTextButton(
                             title: S.of(context).pynw,
@@ -312,7 +357,7 @@ class PaymentSection extends ConsumerWidget {
                                 );
                               }
                             },
-                          ),
+                          )
                         ],
                       ),
                       loading: (_) => const LoadingWidget(),

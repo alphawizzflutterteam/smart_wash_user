@@ -15,6 +15,8 @@ Future<String> getToken() async {
       )
       .toString();
 
+  print(res);
+
   return res;
 }
 
@@ -31,12 +33,14 @@ Dio getDio() {
     'Accept': 'application/json',
     'Authorization': 'Bearer $toekn'
   };
+
   dio.options.headers = {
     'accept': 'application/json',
     'Authorization': 'Bearer $toekn'
   };
   dio.options.followRedirects = false;
 
+  log('Bearer $toekn');
   //for Logging the Request And response
   dio.interceptors.add(
     PrettyDioLogger(

@@ -664,7 +664,9 @@ class _ChooseItemCardState extends State<ChooseItemCard> {
                                             context: context,
                                             builder: (context) => AlertDialog(
                                               title: Text(
-                                                  "You have products from different vendor in cart. Do you want to checkout this products?"),
+                                                "You have products from different vendor in cart. Do you want to checkout this products?",
+                                                style: TextStyle(fontSize: 16),
+                                              ),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
