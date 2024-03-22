@@ -89,6 +89,9 @@ class OrderRepo implements IOrderRepo {
     final Response response = await _dio.get(
       '/orders/$id/details',
     );
+
+    print(id.toString() + "ORder id");
+    log(response.data.toString() + "ORder id res");
     return OrderDetailsModel.fromMap(response.data as Map<String, dynamic>);
   }
 

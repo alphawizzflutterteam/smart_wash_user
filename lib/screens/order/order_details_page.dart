@@ -85,7 +85,8 @@ class OrderDetails extends ConsumerWidget {
                             _.data.data!.order!.discount == 0) {
                           totalAmounttt = _.data.data!.order!.totalAmount;
                         } else {
-                          totalAmounttt = _.data.data!.order!.totalAmount! +
+                          totalAmounttt = _.data.data!.order!.amount!
+                                  .toDouble() +
                               _.data.data!.order!.deliveryCharge!.toDouble() -
                               _.data.data!.order!.discount!.toDouble();
                         }
