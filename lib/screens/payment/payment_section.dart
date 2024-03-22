@@ -88,6 +88,7 @@ class PaymentSection extends ConsumerWidget {
                   )
                   .toList(),
               additional_service_id: [],
+              payment_type: 'online',
             ),
           );
     }
@@ -311,6 +312,9 @@ class PaymentSection extends ConsumerWidget {
                                             vendor_id: outletid.toString(),
                                             deliver_type:
                                                 selectedValue.toString(),
+                                            // selectedValue.toString() == "1"
+                                            // ? "cash_on_delivery"
+                                            // : "online",
                                             address_id: address,
                                             pick_date:
                                                 "${pickUp.dateTime.year}-${pickUp.dateTime.month}-${pickUp.dateTime.day}",
@@ -338,6 +342,7 @@ class PaymentSection extends ConsumerWidget {
                                                 )
                                                 .toList(),
                                             additional_service_id: [],
+                                            payment_type: 'cash_on_delivery',
                                           ),
                                         );
                                   }

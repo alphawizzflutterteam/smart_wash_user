@@ -4,11 +4,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class OrderPlaceModel {
-
-
- String franchise_id;
- String vendor_id;
- String deliver_type;
+  String franchise_id;
+  String vendor_id;
+  String deliver_type;
   String pick_date;
   String pick_hour;
   String delivery_date;
@@ -17,12 +15,12 @@ class OrderPlaceModel {
   String address_id;
   String? coupon_id;
   String? instruction;
+  String? payment_type;
   List<String> additional_service_id;
   OrderPlaceModel({
-
-     required this.franchise_id,
-     required this.vendor_id,
-     required this.deliver_type,
+    required this.franchise_id,
+    required this.vendor_id,
+    required this.deliver_type,
     required this.pick_date,
     required this.pick_hour,
     required this.delivery_date,
@@ -31,13 +29,14 @@ class OrderPlaceModel {
     required this.address_id,
     this.coupon_id,
     this.instruction,
+    required this.payment_type,
     required this.additional_service_id,
   });
 
   OrderPlaceModel copyWith({
-     String? franchise_id,
-     String? vendor_id,
-     String? deliver_type,
+    String? franchise_id,
+    String? vendor_id,
+    String? deliver_type,
     String? pick_date,
     String? pick_hour,
     String? delivery_date,
@@ -46,12 +45,13 @@ class OrderPlaceModel {
     String? address_id,
     String? coupon_id,
     String? instruction,
+    String? payment_type,
     List<String>? additional_service_id,
   }) {
     return OrderPlaceModel(
       franchise_id: franchise_id ?? this.franchise_id,
-       vendor_id: vendor_id ?? this.vendor_id,
-       deliver_type: deliver_type ?? this.deliver_type,
+      vendor_id: vendor_id ?? this.vendor_id,
+      deliver_type: deliver_type ?? this.deliver_type,
       pick_date: pick_date ?? this.pick_date,
       pick_hour: pick_hour ?? this.pick_hour,
       delivery_date: delivery_date ?? this.delivery_date,
@@ -60,6 +60,7 @@ class OrderPlaceModel {
       address_id: address_id ?? this.address_id,
       coupon_id: coupon_id ?? this.coupon_id,
       instruction: instruction ?? this.instruction,
+      payment_type: payment_type ?? this.payment_type,
       additional_service_id:
           additional_service_id ?? this.additional_service_id,
     );
@@ -67,9 +68,9 @@ class OrderPlaceModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-       'franchise_id': franchise_id,
-       'vendor_id': vendor_id,
-       'deliver_type': deliver_type,
+      'franchise_id': franchise_id,
+      'vendor_id': vendor_id,
+      'deliver_type': deliver_type,
       'pick_date': pick_date,
       'pick_hour': pick_hour,
       'delivery_date': delivery_date,
@@ -78,20 +79,21 @@ class OrderPlaceModel {
       'address_id': address_id,
       'coupon_id': coupon_id,
       'instruction': instruction,
+      'payment_type': payment_type,
       'additional_service_id': additional_service_id,
     };
   }
 
   factory OrderPlaceModel.fromMap(Map<String, dynamic> map) {
     return OrderPlaceModel(
-
       franchise_id: map['franchise_id'] as String,
       vendor_id: map['vendor_id'] as String,
-       deliver_type: map['deliver_type'] as String,
+      deliver_type: map['deliver_type'] as String,
       pick_date: map['pick_date'] as String,
       pick_hour: map['pick_hour'] as String,
       delivery_date: map['delivery_date'] as String,
       delivery_hour: map['delivery_hour'] as String,
+      payment_type: map['payment_type'] as String,
       products: List<OrderProductModel>.from(
         (map['products'] as List<int>).map<OrderProductModel>(
           (x) => OrderProductModel.fromMap(x as Map<String, dynamic>),
@@ -115,17 +117,15 @@ class OrderPlaceModel {
   @override
   String toString() {
     return 'OrderPlaceModel('
-         ' franchise_id : $franchise_id ,vendor_id : $vendor_id ,deliver_type : $deliver_type ,'
-        ' pick_date: $pick_date, pick_hour: $pick_hour, delivery_date: $delivery_date, delivery_hour: $delivery_hour, products: $products, address_id: $address_id, coupon_id: $coupon_id, instruction: $instruction, additional_service_id: $additional_service_id)';
+        ' franchise_id : $franchise_id ,vendor_id : $vendor_id ,deliver_type : $deliver_type ,'
+        ' pick_date: $pick_date, pick_hour: $pick_hour,payment_type: $payment_type, delivery_date: $delivery_date, delivery_hour: $delivery_hour, products: $products, address_id: $address_id, coupon_id: $coupon_id, instruction: $instruction, additional_service_id: $additional_service_id)';
   }
 
   @override
   bool operator ==(covariant OrderPlaceModel other) {
     if (identical(this, other)) return true;
 
-    return
-
-        other.vendor_id == vendor_id &&
+    return other.vendor_id == vendor_id &&
         other.deliver_type == deliver_type &&
         other.pick_date == pick_date &&
         other.pick_hour == pick_hour &&
@@ -134,23 +134,23 @@ class OrderPlaceModel {
         listEquals(other.products, products) &&
         other.address_id == address_id &&
         other.coupon_id == coupon_id &&
+        other.payment_type == payment_type &&
         other.instruction == instruction &&
         listEquals(other.additional_service_id, additional_service_id);
   }
 
   @override
   int get hashCode {
-
-    return
-      vendor_id.hashCode ^
-      deliver_type.hashCode ^
-   pick_date.hashCode ^
+    return vendor_id.hashCode ^
+        deliver_type.hashCode ^
+        pick_date.hashCode ^
         pick_hour.hashCode ^
         delivery_date.hashCode ^
         delivery_hour.hashCode ^
         products.hashCode ^
         address_id.hashCode ^
         coupon_id.hashCode ^
+        payment_type.hashCode ^
         instruction.hashCode ^
         additional_service_id.hashCode;
   }
